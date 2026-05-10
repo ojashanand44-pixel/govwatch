@@ -146,10 +146,96 @@ section{padding:120px 64px}
 #india-map{width:100%;height:100%;background:#0a1020}
 .map-overlay-legend{position:absolute;bottom:20px;left:20px;z-index:500;background:rgba(6,8,16,.92);border:1px solid var(--border);border-radius:10px;padding:14px 18px;backdrop-filter:blur(10px)}
 .mleg-title{font-size:10px;font-weight:700;color:#fff;letter-spacing:2px;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:10px}
+.mleg.sd-title {font-size:14px;font-weight:800;color:var(--gold);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;font-family:'Space Mono',monospace}
+
+/* GLOBAL GOV MODAL */
+.gov-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(6, 8, 16, 0.85); backdrop-filter: blur(12px); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.gov-modal.open { opacity: 1; pointer-events: auto; }
+.gov-modal-content { background: linear-gradient(145deg, rgba(16,24,40,0.95) 0%, rgba(6,8,16,0.98) 100%); border: 1px solid rgba(255,255,255,0.08); padding: 48px; border-radius: 24px; max-width: 800px; width: 90%; position: relative; transform: translateY(20px) scale(0.98); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 40px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05); max-height:90vh; overflow-y:auto; }
+.gov-modal.open .gov-modal-content { transform: translateY(0) scale(1); }
+.gov-modal-close { position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--text2); font-size: 20px; cursor: pointer; transition: all 0.2s; }
+.gov-modal-close:hover { background: rgba(255,255,255,0.1); color: #fff; transform: rotate(90deg); }
+
+.sm-stat { background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.05); border-radius: 14px; padding: 20px; transition: all 0.3s; }
+.sm-stat:hover { background: rgba(255,255,255,.04); border-color: rgba(245,200,66,.2); transform: translateY(-3px); }
+.btn-danger { background: rgba(255,71,87,.1); color: var(--red); border: 1px solid rgba(255,71,87,.3); padding: 16px 32px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Syne', sans-serif; transition: all 0.25s; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-danger:hover { background: rgba(255,71,87,.2); border-color: rgba(255,71,87,.6); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,71,87,.15); }
+
+/* Popover Flowchart */
+.fc-popover { position: absolute; bottom: 100%; left: 50%; transform: translate(-50%, 0) scale(0.95); background: linear-gradient(145deg, rgba(16,24,40,0.98) 0%, rgba(6,8,16,1) 100%); border: 1px solid rgba(245,200,66,.4); padding: 20px; border-radius: 12px; width: 320px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 100; }
+.fc-popover::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border-width: 8px; border-style: solid; border-color: rgba(245,200,66,.4) transparent transparent transparent; }
+.fc-popover::before { content: ''; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); width: 2px; height: 30px; background: linear-gradient(to bottom, rgba(245,200,66,.4), transparent); }
+.fc:hover { z-index: 10; }
+.fc:hover .fc-popover { opacity: 1; transform: translate(-50%, -30px) scale(1); }
+
+.fc-pop-title { font-size: 13px; font-weight: 800; color: var(--gold); margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; font-family: 'Space Mono', monospace; }
+.fc-pop-desc { font-size: 10px; color: var(--text2); line-height: 1.5; font-family: 'Space Mono', monospace; margin-bottom: 14px; }
+.fc-pop-flow { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px; width: 100%; margin-bottom: 14px; }
+.fc-pop-node { padding: 6px; font-size: 9px; border: 1px solid rgba(100,130,220,.3); background: rgba(0,0,0,0.4); flex: 1; text-align: center; border-radius: 4px; font-family: 'Space Mono', monospace; color: #fff; }
+.fc-pop-arrow { font-size: 10px; margin: 0 2px; color: var(--gold); }
+.fc-pop-stats { display: flex; justify-content: space-between; width: 100%; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
+.fc-pop-stat { font-size: 9px; color: var(--text2); font-family: 'Space Mono', monospace; text-align: left; }
+.fc-pop-stat span { display: block; font-size: 13px; color: #fff; font-weight: 700; margin-top: 2px; }
+
 .mleg-item{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--text2);font-family:'Space Mono',monospace;margin-bottom:7px}
 .mleg-item:last-child{margin-bottom:0}
 .mleg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .map-overlay-info{position:absolute;top:20px;right:20px;z-index:500;background:rgba(6,8,16,.92);border:1px solid var(--border);border-radius:10px;padding:14px 18px;backdrop-filter:blur(10px)}
+
+/* GOD VIEW OVERLAY */
+.god-view { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #04060A; z-index: 10000; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; padding: 20px; box-sizing: border-box; font-family: 'Space Mono', monospace; overflow: hidden; }
+.god-view.active { opacity: 1; pointer-events: auto; }
+.gv-scanline { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.25) 51%); background-size: 100% 4px; z-index: 9999; pointer-events: none; opacity: 0.3; }
+.gv-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,229,255,0.2); padding-bottom: 15px; margin-bottom: 20px; position: relative; z-index: 10; }
+.gv-status { color: #fff; font-size: 12px; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
+.gv-pulse { width: 12px; height: 12px; background: var(--red); border-radius: 50%; box-shadow: 0 0 10px var(--red); animation: gvPulse 1s infinite alternate; }
+@keyframes gvPulse { from { opacity: 0.4; transform: scale(0.9); } to { opacity: 1; transform: scale(1.1); box-shadow: 0 0 20px var(--red); } }
+.gv-title { color: var(--cyan); font-size: 18px; font-weight: 800; letter-spacing: 4px; text-shadow: 0 0 10px var(--cyan); }
+.gv-close { background: rgba(255,71,87,0.1); border: 1px solid var(--red); color: var(--red); padding: 8px 16px; font-family: 'Space Mono', monospace; font-size: 12px; cursor: pointer; transition: all 0.2s; border-radius: 4px; }
+.gv-close:hover { background: var(--red); color: #fff; box-shadow: 0 0 15px var(--red); }
+
+.gv-grid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 20px; flex: 1; min-height: 0; position: relative; z-index: 10; }
+.gv-panel { background: rgba(6, 12, 24, 0.6); border: 1px solid rgba(0,229,255,0.15); border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: inset 0 0 40px rgba(0,229,255,0.02); }
+.gv-panel-title { background: rgba(0,229,255,0.1); color: var(--cyan); padding: 8px 12px; font-size: 11px; font-weight: 700; letter-spacing: 2px; border-bottom: 1px solid rgba(0,229,255,0.15); }
+
+/* Left Map */
+.gv-map-container { flex: 1; position: relative; background: #000; overflow: hidden; }
+.gv-radar { position: absolute; top: 50%; left: 50%; width: 200%; height: 200%; transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, rgba(0, 229, 255, 0.4) 100%); animation: gvRadar 4s linear infinite; pointer-events: none; z-index: 400; }
+@keyframes gvRadar { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+/* Center Feed */
+.gv-terminal { flex: 1; padding: 16px; overflow-y: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; }
+.gv-line { font-size: 11px; line-height: 1.4; color: #a0aec0; text-shadow: 0 0 4px rgba(160, 174, 192, 0.4); animation: gvLineIn 0.3s ease-out forwards; }
+@keyframes gvLineIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.gv-line .time { color: var(--gold); margin-right: 8px; }
+.gv-line.warn { color: var(--gold); text-shadow: 0 0 5px var(--gold); }
+.gv-line.err { color: var(--red); text-shadow: 0 0 5px var(--red); }
+.gv-line.info { color: var(--cyan); text-shadow: 0 0 5px var(--cyan); }
+
+/* Right AI */
+.gv-ai-panel { padding: 16px; overflow-y: auto; }
+.gv-risk-card { background: rgba(255,71,87,0.05); border: 1px solid rgba(255,71,87,0.3); padding: 16px; border-radius: 6px; margin-bottom: 24px; box-shadow: inset 0 0 20px rgba(255,71,87,0.05); }
+.gv-rc-state { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: 2px; margin-bottom: 4px; }
+.gv-rc-score { font-size: 12px; color: var(--text2); margin-bottom: 12px; }
+.gv-rc-list { list-style: none; padding: 0; margin: 0 0 16px 0; }
+.gv-rc-list li { font-size: 11px; color: var(--gold); margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px; }
+.gv-rc-pred { font-size: 11px; color: var(--cyan); padding-top: 12px; border-top: 1px solid rgba(0,229,255,0.2); }
+
+/* Sliders */
+.gv-slider-group { margin-bottom: 16px; }
+.gv-slider-group label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text2); margin-bottom: 8px; text-transform: uppercase; }
+.gv-slider-group label span { color: var(--cyan); font-weight: 700; }
+.gv-slider { -webkit-appearance: none; width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; outline: none; }
+.gv-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--cyan); cursor: pointer; box-shadow: 0 0 10px var(--cyan); }
+
+/* Bottom DNA */
+.gv-bottom-panel { margin-top: 20px; height: 140px; background: rgba(6, 12, 24, 0.6); border: 1px solid rgba(0,229,255,0.15); border-radius: 8px; position: relative; z-index: 10; display: flex; flex-direction: column; }
+.gv-dna-flow { flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; }
+.gv-dna-node { background: rgba(0,0,0,0.5); border: 1px solid rgba(0,229,255,0.3); padding: 12px 24px; border-radius: 6px; text-align: center; font-size: 11px; font-weight: 700; color: #fff; position: relative; min-width: 120px; box-shadow: inset 0 0 20px rgba(0,229,255,0.05); }
+.gv-dna-node .leak { display: block; font-size: 9px; color: var(--green); font-weight: 400; margin-top: 4px; }
+.gv-dna-arrow { color: rgba(255,255,255,0.2); font-size: 20px; position: relative; }
+.gv-dna-arrow::after { content: ''; position: absolute; top: 50%; left: -50px; width: 50px; height: 2px; background: linear-gradient(90deg, transparent, var(--cyan)); transform: translateY(-50%); animation: dnaFlow 1.5s linear infinite; }
+@keyframes dnaFlow { 0% { left: -80px; opacity: 0; } 50% { opacity: 1; } 100% { left: 30px; opacity: 0; } }
 .minfo-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px}
 .minfo-sub{font-size:10px;color:var(--text2);font-family:'Space Mono',monospace;line-height:1.5}
 .map-overlay-stats{position:absolute;bottom:20px;right:20px;z-index:500;display:flex;gap:10px}
@@ -350,12 +436,65 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
   <div class="tag rv">Platform Capabilities</div>
   <h2 class="stitle rv d1">Everything You Need<br>to Govern Smarter</h2>
   <div class="fgrid">
-    <div class="fc"><div class="fc-icon">🔴</div><h3>Real-Time Data Sync</h3><p>Live integration with 40+ portals including DBT Bharat, NIC APIs, PFMS, and state MIS systems. 5-minute refresh cycle.</p><span class="fc-link">→ Live monitoring</span></div>
-    <div class="fc"><div class="fc-icon">🗺️</div><h3>District-Level Drill-Down</h3><p>Interactive maps for every scheme at state, district, and block level. Identify geographic gaps in seconds.</p><span class="fc-link">→ 740+ districts</span></div>
-    <div class="fc"><div class="fc-icon">🤖</div><h3>AI Anomaly Detection</h3><p>ML models trained on 10 years of scheme data auto-flag fund stagnation, leakage, and implementation failure.</p><span class="fc-link">→ Predictive alerts</span></div>
-    <div class="fc"><div class="fc-icon">📊</div><h3>Fund Flow Visualisation</h3><p>Sankey diagrams showing fund movement from Union budget through state treasuries to last-mile beneficiaries.</p><span class="fc-link">→ End-to-end tracking</span></div>
-    <div class="fc"><div class="fc-icon">📋</div><h3>Compliance Reporting</h3><p>Auto-generated reports for PAC, CAG, parliamentary committees, and RTI responses. One click, fully formatted.</p><span class="fc-link">→ Audit-ready</span></div>
-    <div class="fc"><div class="fc-icon">🔐</div><h3>Role-Based Access</h3><p>Granular permissions for PMO, ministries, state governments, collectors, and civil society. Fully DPDP-compliant.</p><span class="fc-link">→ Enterprise security</span></div>
+    <div class="fc rv d1">
+      <div class="fc-popover">
+        <div class="fc-pop-title">Live Data Pipeline</div>
+        <div class="fc-pop-desc">Live integration pipeline ingests data via secure APIs, ensuring the dashboard is never more than 5 minutes out of date.</div>
+        <div class="fc-pop-flow"><div class="fc-pop-node">State APIs</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">Ingest Layer</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">Dashboard</div></div>
+        <div class="fc-pop-stats"><div class="fc-pop-stat">Connections<span style="color:var(--gold)">42+ Live</span></div><div class="fc-pop-stat" style="text-align:right">Sync Latency<span style="color:var(--green)">&lt; 5 min</span></div></div>
+      </div>
+      <div class="fc-icon">🔴</div><h3>Real-Time Data Sync</h3><p>Live integration with 40+ portals including DBT Bharat, NIC APIs, PFMS, and state MIS systems. 5-minute refresh cycle.</p><span class="fc-link">Hover to view flow →</span>
+    </div>
+
+    <div class="fc rv d2">
+      <div class="fc-popover">
+        <div class="fc-pop-title">Geo-Spatial Engine</div>
+        <div class="fc-pop-desc">District and block-level data is normalized and mapped to geographic coordinates, allowing instantaneous heat map generation.</div>
+        <div class="fc-pop-flow"><div class="fc-pop-node">Block Data</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">Geo-Coding</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">Map Render</div></div>
+        <div class="fc-pop-stats"><div class="fc-pop-stat">Districts<span style="color:var(--gold)">784 Mapped</span></div><div class="fc-pop-stat" style="text-align:right">Precision<span style="color:var(--cyan)">10 meters</span></div></div>
+      </div>
+      <div class="fc-icon">🗺️</div><h3>District-Level Drill-Down</h3><p>Interactive maps for every scheme at state, district, and block level. Identify geographic gaps in seconds.</p><span class="fc-link">Hover to view flow →</span>
+    </div>
+
+    <div class="fc rv d3">
+      <div class="fc-popover">
+        <div class="fc-pop-title">Predictive ML Model</div>
+        <div class="fc-pop-desc">Machine learning models analyze spending patterns against a 10-year dataset to automatically flag suspicious misallocations.</div>
+        <div class="fc-pop-flow"><div class="fc-pop-node">Past Data</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">ML Engine</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">Alerts Hub</div></div>
+        <div class="fc-pop-stats"><div class="fc-pop-stat">Accuracy<span style="color:var(--green)">94.2%</span></div><div class="fc-pop-stat" style="text-align:right">Anomalies<span style="color:var(--red)">2,104 Caught</span></div></div>
+      </div>
+      <div class="fc-icon">🤖</div><h3>AI Anomaly Detection</h3><p>ML models trained on 10 years of scheme data auto-flag fund stagnation, leakage, and implementation failure.</p><span class="fc-link">Hover to view flow →</span>
+    </div>
+
+    <div class="fc rv d1">
+      <div class="fc-popover">
+        <div class="fc-pop-title">Traceability Ledger</div>
+        <div class="fc-pop-desc">A double-entry accounting ledger system tracks every rupee from Union disbursement down to the last-mile SNA receipt.</div>
+        <div class="fc-pop-flow"><div class="fc-pop-node">Union Budget</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">Treasury</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">Beneficiary</div></div>
+        <div class="fc-pop-stats"><div class="fc-pop-stat">Tracked<span style="color:var(--gold)">₹14.6L Cr</span></div><div class="fc-pop-stat" style="text-align:right">Leakage<span style="color:var(--green)">Near 0%</span></div></div>
+      </div>
+      <div class="fc-icon">📊</div><h3>Fund Flow Visualisation</h3><p>Sankey diagrams showing fund movement from Union budget through state treasuries to last-mile beneficiaries.</p><span class="fc-link">Hover to view flow →</span>
+    </div>
+
+    <div class="fc rv d2">
+      <div class="fc-popover">
+        <div class="fc-pop-title">Automated CAG Audits</div>
+        <div class="fc-pop-desc">Generates secure, cryptographically signed compliance reports formatted precisely to the requirements of the CAG and PAC.</div>
+        <div class="fc-pop-flow"><div class="fc-pop-node">DB Query</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">Signature</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">PDF Export</div></div>
+        <div class="fc-pop-stats"><div class="fc-pop-stat">Generated<span style="color:var(--gold)">12,000+</span></div><div class="fc-pop-stat" style="text-align:right">Pass Rate<span style="color:var(--green)">100%</span></div></div>
+      </div>
+      <div class="fc-icon">📋</div><h3>Compliance Reporting</h3><p>Auto-generated reports for PAC, CAG, parliamentary committees, and RTI responses. One click, fully formatted.</p><span class="fc-link">Hover to view flow →</span>
+    </div>
+
+    <div class="fc rv d3">
+      <div class="fc-popover">
+        <div class="fc-pop-title">Zero-Trust Security</div>
+        <div class="fc-pop-desc">Implements strict role-based access control governed by DPDP guidelines. Access is authenticated via Gov.in SSO.</div>
+        <div class="fc-pop-flow"><div class="fc-pop-node">User SSO</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">Role Check</div><div class="fc-pop-arrow">→</div><div class="fc-pop-node">Access</div></div>
+        <div class="fc-pop-stats"><div class="fc-pop-stat">Clearance<span style="color:var(--gold)">NIC Certified</span></div><div class="fc-pop-stat" style="text-align:right">Breaches<span style="color:var(--green)">0 Detected</span></div></div>
+      </div>
+      <div class="fc-icon">🔐</div><h3>Role-Based Access</h3><p>Granular permissions for PMO, ministries, state governments, collectors, and civil society. Fully DPDP-compliant.</p><span class="fc-link">Hover to view flow →</span>
+    </div>
   </div>
 </section>
 
@@ -369,6 +508,45 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
   </div>
 </section>
 
+<!-- GLOBAL GOVDATA MODAL -->
+<div id="gov-modal" class="gov-modal">
+  <div class="gov-modal-content">
+    <button class="gov-modal-close" onclick="closeGovModal()">✕</button>
+    <div class="tag">Process Architecture</div>
+    <h2 class="stitle" id="gm-title" style="font-size:36px; margin-bottom:16px; background: linear-gradient(to right, #fff, #a0aec0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">System Flow</h2>
+    <p class="ssub" id="gm-desc" style="margin-bottom:32px; max-width:100%; font-size:15px"></p>
+    <div class="sd-flow" id="gm-flow" style="margin-bottom:32px"></div>
+    <div class="dgrid" id="gm-stats" style="grid-template-columns:1fr 1fr; gap:24px;"></div>
+  </div>
+</div>
+
+<!-- SCHEME DETAIL MODAL -->
+<div id="scheme-modal" class="gov-modal">
+  <div class="gov-modal-content" style="max-width: 650px;">
+    <button class="gov-modal-close" onclick="closeSchemeModal()">✕</button>
+    <div class="tag" id="sm-ministry" style="margin-bottom: 16px">Ministry</div>
+    <h2 class="stitle" id="sm-title" style="font-size:32px; margin-bottom:12px; background: linear-gradient(to right, #fff, #a0aec0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Scheme Name</h2>
+    <p class="ssub" id="sm-desc" style="margin-bottom:32px; max-width:100%; line-height: 1.6; font-size:14px">Description</p>
+    
+    <div class="dgrid" style="grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px">
+      <div class="sm-stat"><div class="dlabel">Budget Allocated</div><div class="dnum" id="sm-budget" style="font-size:24px">₹0 Cr</div></div>
+      <div class="sm-stat"><div class="dlabel">Funds Disbursed</div><div class="dnum" id="sm-disbursed" style="font-size:24px; color:var(--cyan)">₹0 Cr</div></div>
+      <div class="sm-stat"><div class="dlabel">Beneficiaries</div><div class="dnum" id="sm-beneficiaries" style="font-size:24px; color:var(--gold)">0</div></div>
+      <div class="sm-stat"><div class="dlabel">Implementation</div><div class="dnum" id="sm-impl" style="font-size:24px; color:var(--green)">0%</div></div>
+    </div>
+    
+    <div style="background:rgba(255,255,255,.02); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); margin-bottom:32px">
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:12px; color:var(--text2); font-weight:700; letter-spacing:1px; text-transform:uppercase"><span>Fund Utilization</span><span id="sm-util-pct" style="color:var(--gold)">0%</span></div>
+      <div style="height:8px; background:var(--ink); border-radius:4px; overflow:hidden"><div id="sm-util-bar" style="height:100%; background:linear-gradient(90deg, var(--gold), #ffdf80); width:0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1)"></div></div>
+    </div>
+    
+    <button class="btn-danger" id="sm-report-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      Report Implementation Issue / Delay
+    </button>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="fg">
@@ -379,6 +557,77 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
   </div>
   <div class="fbot"><span>© 2025 GovWatch Technologies Pvt. Ltd. — Made in India 🇮🇳</span><span>ISO 27001 · DPDP Compliant · NIC Certified</span></div>
 </footer>
+
+<!-- GOD VIEW FULLSCREEN MODAL -->
+<div id="god-view" class="god-view">
+  <div class="gv-scanline"></div>
+  <div class="gv-header">
+    <div class="gv-status"><span class="gv-pulse"></span>NATIONAL GOVERNANCE STATUS: <span style="color:var(--red); text-shadow:0 0 10px var(--red)">ELEVATED RISK</span></div>
+    <div class="gv-title">NOC TACTICAL FEED</div>
+    <button class="gv-close" onclick="closeGodView()">EXIT TERMINAL ✕</button>
+  </div>
+  
+  <div class="gv-grid">
+    <!-- LEFT: MAP -->
+    <div class="gv-panel">
+      <div class="gv-panel-title">📡 SATELLITE PULSE LAYER</div>
+      <div id="gv-map" class="gv-map-container">
+        <div class="gv-radar"></div>
+      </div>
+    </div>
+    
+    <!-- CENTER: LIVE EVENT STREAM -->
+    <div class="gv-panel">
+      <div class="gv-panel-title">⚡ LIVE INTELLIGENCE FEED</div>
+      <div class="gv-terminal" id="gv-term"></div>
+    </div>
+    
+    <!-- RIGHT: AI RISK ENGINE -->
+    <div class="gv-panel gv-ai-panel">
+      <div class="gv-panel-title">🧠 AI RISK ENGINE</div>
+      <div class="gv-risk-card">
+        <div class="gv-rc-state">BIHAR</div>
+        <div class="gv-rc-score">Risk Score: <span style="color:var(--red); font-weight:800; font-size:14px">82/100</span></div>
+        <ul class="gv-rc-list">
+          <li>⚠ DBT Failure Spike</li>
+          <li>⚠ 14-day fund stagnation</li>
+          <li>⚠ Beneficiary mismatch detected</li>
+        </ul>
+        <div class="gv-rc-pred">AI predicts implementation slowdown in 9 districts</div>
+      </div>
+      
+      <div class="gv-panel-title" style="margin-top:20px; margin-bottom:16px">🤯 THREAT SIMULATOR</div>
+      <div class="gv-slider-group">
+        <label>Rainfall Anomaly <span id="val-rain">+40%</span></label>
+        <input type="range" min="-50" max="50" value="40" class="gv-slider" oninput="document.getElementById('val-rain').textContent = (this.value>0?'+':'') + this.value + '%'">
+      </div>
+      <div class="gv-slider-group">
+        <label>Budget Cut <span id="val-cut">20%</span></label>
+        <input type="range" min="0" max="50" value="20" class="gv-slider" oninput="document.getElementById('val-cut').textContent = this.value + '%'">
+      </div>
+      <div class="gv-slider-group">
+        <label>Inflation Spike <span id="val-inf">+6%</span></label>
+        <input type="range" min="0" max="15" value="6" class="gv-slider" oninput="document.getElementById('val-inf').textContent = '+' + this.value + '%'">
+      </div>
+    </div>
+  </div>
+  
+  <!-- BOTTOM: DNA -->
+  <div class="gv-bottom-panel">
+    <div class="gv-panel-title">🧬 SCHEME DNA: FUND TRACEABILITY</div>
+    <div class="gv-dna-flow">
+      <div class="gv-dna-node">Budget Source<br><span class="leak">0% leak</span></div>
+      <div class="gv-dna-arrow">→</div>
+      <div class="gv-dna-node">Ministry Alloc.<br><span class="leak">0.1% leak</span></div>
+      <div class="gv-dna-arrow">→</div>
+      <div class="gv-dna-node">State Treasury<br><span class="leak" style="color:var(--gold)">1.2% delay</span></div>
+      <div class="gv-dna-arrow">→</div>
+      <div class="gv-dna-node" style="border:1px solid var(--red); box-shadow: inset 0 0 20px rgba(255,71,87,0.2)">District Office<br><span class="leak" style="color:var(--red)">4.8% stagnation</span></div>
+      <div class="gv-dna-arrow">→</div>
+      <div class="gv-dna-node">Beneficiary</div>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ════════ HERO THREE.JS ════════ */
@@ -596,8 +845,27 @@ async function loadStats(){
     cnt('hc1',data.activeSchemes);
     cnt('hc2',+(data.totalBudgetCr/100000).toFixed(1),1);
     cnt('hc3',data.implRate,1);
-    cnt('dc1',data.activeSchemes);
-    cnt('dc2',+(data.totalBudgetCr/100000).toFixed(1),1);
+    const dashObs=new IntersectionObserver(es=>{if(es[0].isIntersecting){
+      cnt('dc1',data.activeSchemes);
+      cnt('dc2',+(data.totalBudgetCr/100000).toFixed(1),1);
+      
+      // God Level Live Fluctuation
+      if (!window.liveGraphInterval) {
+        let baseFunds = +(data.totalBudgetCr/100000);
+        window.liveGraphInterval = setInterval(() => {
+          document.querySelectorAll('.mbar').forEach(b => {
+            const current = parseFloat(b.style.height);
+            b.style.height = `${Math.max(5, Math.min(100, current + (Math.random() - 0.5) * 12))}%`;
+            b.style.transition = 'height 1s ease-in-out';
+          });
+          const dc2 = document.getElementById('dc2');
+          if (dc2) dc2.textContent = (baseFunds + (Math.random() * 0.04 - 0.01)).toFixed(2);
+        }, 1500);
+      }
+      
+      dashObs.disconnect();
+    }},{threshold:.2});
+    const dash=document.getElementById('dashboard');if(dash)dashObs.observe(dash);
     const ot=document.getElementById('stat-ontrack');
     const rv=document.getElementById('stat-review');
     const fl=document.getElementById('stat-flagged');
@@ -631,21 +899,174 @@ async function loadAlerts(){
 }
 
 /* ════════ LOAD SCHEMES FROM API ════════ */
-async function loadSchemes(category=''){
+async function loadSchemes(cat='all'){
   try{
-    const url=category?`${API}/schemes?category=${encodeURIComponent(category)}`:`${API}/schemes`;
-    const res=await fetch(url);
+    const res=await fetch(`${API}/schemes${cat!=='all'?'?category='+cat:''}`);
     const schemes=await res.json();
+    const grid=document.querySelector('.sgrid');
     const sm={active:{cls:'ta',label:'Active'},review:{cls:'tr',label:'Under Review'},flagged:{cls:'tf',label:'Flagged'}};
-    const grid=document.getElementById('scheme-grid');
     if(!grid||!schemes.length)return;
     grid.innerHTML=schemes.map(s=>{
       const st=sm[s.status]||sm.active;
       const disbL=(s.disbursed_cr>=100000)?(s.disbursed_cr/100000).toFixed(1)+'L Cr':(s.disbursed_cr>=1000)?(s.disbursed_cr/1000).toFixed(0)+'K Cr':s.disbursed_cr+'Cr';
-      return `<div class="scheme-card"><div class="sc-min">${s.ministry}</div><div class="sc-title">${s.name}</div><div class="sc-desc">${s.description}</div><div class="sc-nums"><div class="sc-num"><div class="sc-num-v">${s.beneficiaries||'—'}</div><div class="sc-num-l">Beneficiaries</div></div><div class="sc-num"><div class="sc-num-v">₹${disbL}</div><div class="sc-num-l">Disbursed</div></div></div><span class="tag-s ${st.cls}"><span class="sd"></span>${st.label} — ${s.impl_pct}%</span></div>`;
+      return `<div class="scheme-card" onclick="openSchemeModal(${s.id})" style="cursor:pointer; transition:transform 0.2s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'"><div class="sc-min">${s.ministry}</div><div class="sc-title">${s.name}</div><div class="sc-desc">${s.description}</div><div class="sc-nums"><div class="sc-num"><div class="sc-num-v">${s.beneficiaries||'—'}</div><div class="sc-num-l">Beneficiaries</div></div><div class="sc-num"><div class="sc-num-v">₹${disbL}</div><div class="sc-num-l">Disbursed</div></div></div><span class="tag-s ${st.cls}"><span class="sd"></span>${st.label} — ${s.impl_pct}%</span></div>`;
     }).join('');
     document.querySelectorAll('.scheme-card').forEach(el=>obs.observe(el));
   }catch(e){console.warn('Schemes API unavailable, showing static data.');}
+}
+
+/* ════════ SCHEME DETAIL MODAL & GRIEVANCE REPORTING ════════ */
+async function openSchemeModal(id) {
+  try {
+    const res = await fetch(`${API}/schemes/${id}`);
+    const s = await res.json();
+    document.getElementById('sm-title').textContent = s.name;
+    document.getElementById('sm-ministry').textContent = s.ministry;
+    document.getElementById('sm-desc').textContent = s.description;
+    document.getElementById('sm-budget').textContent = `₹${(s.budget_cr>=100000?(s.budget_cr/100000).toFixed(2)+'L':(s.budget_cr/1000).toFixed(1)+'K')} Cr`;
+    document.getElementById('sm-disbursed').textContent = `₹${(s.disbursed_cr>=100000?(s.disbursed_cr/100000).toFixed(2)+'L':(s.disbursed_cr/1000).toFixed(1)+'K')} Cr`;
+    document.getElementById('sm-beneficiaries').textContent = s.beneficiaries||'—';
+    document.getElementById('sm-impl').textContent = `${s.impl_pct}%`;
+    const utilPct = s.budget_cr > 0 ? (s.disbursed_cr / s.budget_cr) * 100 : 0;
+    document.getElementById('sm-util-pct').textContent = `${utilPct.toFixed(1)}%`;
+    document.getElementById('sm-util-bar').style.width = `${utilPct}%`;
+    
+    document.getElementById('sm-report-btn').onclick = () => reportIssue(s.name);
+    document.getElementById('scheme-modal').classList.add('open');
+  } catch(e) { console.error('Error fetching scheme details', e); }
+}
+window.closeSchemeModal = function() { document.getElementById('scheme-modal').classList.remove('open'); };
+
+async function reportIssue(schemeName) {
+  const msg = prompt(`Report issue for ${schemeName}:\nPlease describe the discrepancy (e.g. Funds not received in village X, Ghost beneficiaries spotted)`);
+  if (!msg) return;
+  try {
+    const res = await fetch(`${API}/grievances`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ message: msg, scheme: schemeName })
+    });
+    if (res.ok) { alert('✅ Grievance submitted successfully and flagged for administrative review.'); loadAlerts(); closeSchemeModal(); }
+    else alert('❌ Failed to submit grievance');
+  } catch { alert('Network error submitting report.'); }
+}
+
+/* ════════ GLOBAL INTERCEPTOR ════════ */
+const govDataDict = {
+  "Explore Dashboard": { title: "Executive Dashboard Logic", desc: "Aggregates state-level execution metrics into a national command center. Provides real-time view of fund utilization and scheme performance.", flow: ["State Nodes", "Data Lake", "KPI Engine", "Dashboard"], stats: [{l:"Live Data Points",v:"14.2M"},{l:"Sync Latency",v:"< 5 min"}] },
+  "Watch Demo ▶": { title: "System Simulation", desc: "A live-data simulation tracking exactly how ₹1 Crore moves from the Union Budget down to 1,600 rural beneficiaries securely.", flow: ["Budget Approval", "PFMS Transfer", "SNA Receipt", "Beneficiary DBT"], stats: [{l:"Simulated Nodes",v:"4,200"},{l:"Tracking Accuracy",v:"99.8%"}] },
+  "Export Report": { title: "Automated CAG Reporting", desc: "Generates secure, cryptographically signed compliance reports directly from the immutable transaction ledger for official audits.", flow: ["Ledger Data", "Formatting Engine", "Digital Signature", "PDF Output"], stats: [{l:"Reports Generated",v:"8,421"},{l:"Audit Time Saved",v:"14K hrs"}] },
+  "Live View →": { title: "National Operations Center", desc: "Direct access to the real-time geospatial tracking interface, securely used by the PMO and State Chief Ministers.", flow: ["Geo-Spatial DB", "Tile Server", "Live Overlays", "NOC Screen"], stats: [{l:"Active Gov Users",v:"1,240"},{l:"Data Layers",v:"24"}] },
+  "Request a Demo →": { title: "State Deployment Sandbox", desc: "Initiates a secure sandbox environment deployment for State Government IT departments to evaluate the tracking system.", flow: ["Request Form", "Sandbox Init", "Dummy Data Load", "Admin Access"], stats: [{l:"Active Sandboxes",v:"12"},{l:"Conversion Rate",v:"85%"}] },
+  "Download Brochure": { title: "Technical Architecture", desc: "Detailed breakdown of the GovWatch tech stack, secure API endpoints, and mandatory government compliance certifications.", flow: ["Gov Cloud", "Microservices", "Zero-Trust Sec", "Data Lake"], stats: [{l:"Documentation",v:"24 Pages"},{l:"Clearance",v:"NIC Certified"}] },
+  "Request Access →": { title: "Officer Authentication Gateway", desc: "Secure gateway for government officials. Requires Gov.in email validation and Aadhar-linked 2FA authentication.", flow: ["Gov.in OAuth", "Role Assignment", "2FA Verification", "Access Granted"], stats: [{l:"Verified Officers",v:"14,200"},{l:"Security Status",v:"Locked"}] },
+  "default": { title: "Standard Government Pipeline", desc: "Standardized data flow procedure for handling and routing sensitive scheme information securely across government domains.", flow: ["Data Source", "Validation Node", "Processing Unit", "Secure Endpoint"], stats: [{l:"Status",v:"Active"},{l:"Uptime",v:"99.99%"}] }
+};
+
+function openGovModal(triggerText) {
+  const data = govDataDict[triggerText] || govDataDict["default"];
+  document.getElementById('gm-title').textContent = data.title;
+  document.getElementById('gm-desc').textContent = data.desc;
+  document.getElementById('gm-flow').innerHTML = data.flow.map(f => `<div class="sd-node">${f}</div>`).join('<div class="sd-arrow">→</div>');
+  document.getElementById('gm-stats').innerHTML = data.stats.map(s => `<div class="sm-stat"><div class="dlabel">${s.l}</div><div class="dnum" style="font-size:28px">${s.v}</div></div>`).join('');
+  document.getElementById('gov-modal').classList.add('open');
+}
+window.closeGovModal = function() { document.getElementById('gov-modal').classList.remove('open'); };
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('button, a, .fc-link');
+  if (!btn) return;
+  
+  if (btn.id === 'pipe-tour-btn' || btn.classList.contains('pill') || btn.closest('.how-step') || btn.closest('.gov-modal') || btn.closest('.scheme-card')) return;
+  if (btn.classList.contains('nav-cta')) { /* allow original prompt to run, but let's override it for the modal effect */ }
+
+  const text = btn.textContent.trim();
+  const href = btn.getAttribute('href');
+  
+  if (btn.tagName === 'BUTTON' || btn.classList.contains('fc-link') || (href && href.startsWith('#') && !btn.closest('.nav-links'))) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (text === 'Live View →') {
+      openGodView();
+    } else {
+      openGovModal(text);
+    }
+  } else if (href === '#') {
+    e.preventDefault();
+    openGovModal(text);
+  }
+});
+
+/* ════════ GOD VIEW (NATIONAL THREAT FEED) ════════ */
+let gvMap, termInt;
+
+window.openGodView = function() {
+  document.getElementById('god-view').classList.add('active');
+  
+  if(!gvMap) {
+    gvMap = L.map('gv-map', {center: [22.5, 82.5], zoom: 4.5, zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false});
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(gvMap);
+    
+    // Glowing pulse markers
+    const states = [
+      {lat: 25.09, lng: 85.31, c: 'var(--red)'}, // Bihar
+      {lat: 27.02, lng: 74.21, c: 'var(--gold)'}, // Rajasthan
+      {lat: 26.85, lng: 80.91, c: 'var(--gold)'}, // UP
+      {lat: 19.75, lng: 75.71, c: 'var(--cyan)'}, // MH
+      {lat: 23.61, lng: 85.27, c: 'var(--red)'}   // Jharkhand
+    ];
+    states.forEach(s => {
+      const icon = L.divIcon({
+        className: 'gv-pulse-icon',
+        html: `<div style="width:16px;height:16px;background:${s.c};border-radius:50%;box-shadow:0 0 20px ${s.c};animation:gvPulse 1s infinite alternate; margin-top:-8px; margin-left:-8px"></div>`
+      });
+      L.marker([s.lat, s.lng], {icon}).addTo(gvMap);
+    });
+  } else {
+    setTimeout(() => gvMap.invalidateSize(), 100);
+  }
+  
+  startTerminalFeed();
+}
+
+window.closeGodView = function() {
+  document.getElementById('god-view').classList.remove('active');
+  if(termInt) clearInterval(termInt);
+}
+
+function startTerminalFeed() {
+  const feed = [
+    "[SYS] PFMS sync complete — Maharashtra",
+    "[WARN] AI anomaly detected — PMAY, Bihar",
+    "[INFO] Rainfall impact model updated — Assam",
+    "[WARN] Citizen grievance surge — Rajasthan",
+    "[ERR] ₹182 Cr fund idle > 21 days — Jharkhand",
+    "[SYS] DBT batch processed — 1.2M beneficiaries",
+    "[INFO] Satellite image mapping complete — UP",
+    "[WARN] Compliance report overdue — Nagaland",
+    "[ERR] Network node failure — Treasury DB 4",
+    "[WARN] Weather alert: Flooding risk — Kerala",
+    "[SYS] Cross-referencing Aadhaar DB — Delhi",
+    "[INFO] Leakage probability dropped 2.1% — Gujarat"
+  ];
+  const term = document.getElementById('gv-term');
+  term.innerHTML = '';
+  
+  if(termInt) clearInterval(termInt);
+  termInt = setInterval(() => {
+    const time = new Date().toLocaleTimeString('en-US', {hour12:false});
+    const msg = feed[Math.floor(Math.random() * feed.length)];
+    let cls = 'info';
+    if(msg.includes('[WARN]')) cls = 'warn';
+    if(msg.includes('[ERR]')) cls = 'err';
+    
+    const div = document.createElement('div');
+    div.className = `gv-line ${cls}`;
+    div.innerHTML = `<span class="time">[${time}]</span> ${msg.replace(/\[.*?\] /,'')}`;
+    term.appendChild(div);
+    if(term.children.length > 20) term.removeChild(term.firstChild);
+    term.scrollTop = term.scrollHeight;
+  }, 800);
 }
 
 /* ════════ REQUEST ACCESS BUTTON ════════ */

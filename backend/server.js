@@ -343,6 +343,14 @@ app.post('/api/alerts', authMiddleware, adminOnly, (req, res) => {
   res.status(201).json({ message: 'Alert created', id: result.lastInsertRowid });
 });
 
+app.post('/api/grievances', (req, res) => {
+  const { message, state, scheme } = req.body;
+  if (!message) return res.status(400).json({ error: 'message is required' });
+  const result = db.prepare('INSERT INTO alerts (type, message, state, scheme) VALUES (?, ?, ?, ?)')
+    .run('error', 'User Report: ' + message, state||null, scheme||null);
+  res.status(201).json({ message: 'Grievance reported successfully' });
+});
+
 app.patch('/api/alerts/:id/resolve', authMiddleware, adminOnly, (req, res) => {
   const result = db.prepare('UPDATE alerts SET resolved=1 WHERE id=?').run(req.params.id);
   if (!result.changes) return res.status(404).json({ error: 'Alert not found' });
