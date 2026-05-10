@@ -586,14 +586,14 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
     <div class="gv-panel gv-ai-panel">
       <div class="gv-panel-title">🧠 AI RISK ENGINE</div>
       <div class="gv-risk-card">
-        <div class="gv-rc-state">BIHAR</div>
-        <div class="gv-rc-score">Risk Score: <span style="color:var(--red); font-weight:800; font-size:14px">82/100</span></div>
+        <div class="gv-rc-state">KARNATAKA</div>
+        <div class="gv-rc-score">Risk Score: <span style="color:var(--gold); font-weight:800; font-size:14px">42/100</span></div>
         <ul class="gv-rc-list">
-          <li>⚠ DBT Failure Spike</li>
-          <li>⚠ 14-day fund stagnation</li>
-          <li>⚠ Beneficiary mismatch detected</li>
+          <li>ℹ Smart City Integration Delay</li>
+          <li>ℹ 5-day fund stagnation — Bangalore</li>
+          <li>ℹ Digital signature mismatch detected</li>
         </ul>
-        <div class="gv-rc-pred">AI predicts implementation slowdown in 9 districts</div>
+        <div class="gv-rc-pred">AI predicts implementation surge in 4 districts</div>
       </div>
       
       <div class="gv-panel-title" style="margin-top:20px; margin-bottom:16px">🤯 THREAT SIMULATOR</div>
@@ -977,7 +977,7 @@ document.addEventListener('click', (e) => {
   const btn = e.target.closest('button, a, .fc-link');
   if (!btn) return;
   
-  if (btn.id === 'pipe-tour-btn' || btn.classList.contains('pill') || btn.closest('.how-step') || btn.closest('.gov-modal') || btn.closest('.scheme-card')) return;
+  if (btn.id === 'pipe-tour-btn' || btn.classList.contains('pill') || btn.closest('.how-step') || btn.closest('.gov-modal') || btn.closest('.scheme-card') || btn.closest('.god-view')) return;
   if (btn.classList.contains('nav-cta')) { /* allow original prompt to run, but let's override it for the modal effect */ }
 
   const text = btn.textContent.trim();
@@ -1004,7 +1004,7 @@ window.openGodView = function() {
   document.getElementById('god-view').classList.add('active');
   
   if(!gvMap) {
-    gvMap = L.map('gv-map', {center: [22.5, 82.5], zoom: 4.5, zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false});
+    gvMap = L.map('gv-map', {center: [22.5, 82.5], zoom: 4.5, zoomControl: true, attributionControl: false, dragging: true, scrollWheelZoom: true});
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(gvMap);
     
     // Glowing pulse markers
