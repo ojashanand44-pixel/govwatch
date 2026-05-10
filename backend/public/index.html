@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GovWatch</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#060810;--ink2:#0b1020;--surface:#111828;
+  --gold:#f5c842;--cyan:#00e5ff;--green:#00ff9d;--red:#ff4757;
+  --text:#b8c4e8;--text2:#4a5880;--border:rgba(80,100,180,0.1);
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--ink);color:var(--text);font-family:'Syne',sans-serif;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:20px 64px;transition:all .4s}
+nav.nav-scrolled{background:rgba(6,8,16,.97);border-bottom:1px solid var(--border);backdrop-filter:blur(14px)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;color:#fff;text-decoration:none}
+.logo-sq{width:32px;height:32px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#000}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{color:var(--text2);font-size:13px;text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-cta{background:var(--gold);color:#000;border:none;padding:9px 22px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .2s}
+.nav-cta:hover{background:#fff}
+
+/* HERO */
+#hero{position:relative;height:100vh;min-height:700px;display:flex;align-items:center;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;z-index:0}
+.hero-grad{position:absolute;inset:0;z-index:1;
+  background:radial-gradient(ellipse 55% 80% at 68% 50%,rgba(6,8,16,0) 0%,rgba(6,8,16,.75) 55%,rgba(6,8,16,1) 100%),
+             linear-gradient(to right,rgba(6,8,16,.98) 0%,rgba(6,8,16,.65) 42%,rgba(6,8,16,.1) 100%)}
+.hero-content{position:relative;z-index:2;padding:0 64px;max-width:660px}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,200,66,.07);border:1px solid rgba(245,200,66,.22);padding:6px 16px;border-radius:100px;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:26px;opacity:0;animation:fu .8s .4s forwards}
+.bdot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pd 2s infinite}
+h1.htitle{font-size:clamp(44px,5vw,78px);font-weight:800;line-height:1.0;letter-spacing:-2.5px;color:#fff;margin-bottom:20px;opacity:0;animation:fu .9s .6s forwards}
+h1.htitle em{color:var(--gold);font-style:normal;display:block}
+.hsub{font-size:13px;color:var(--text2);line-height:1.75;max-width:460px;font-family:'Space Mono',monospace;margin-bottom:38px;opacity:0;animation:fu .8s .8s forwards}
+.hbtns{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:fu .8s 1s forwards}
+.btn-g{background:var(--gold);color:#000;border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .25s}
+.btn-g:hover{background:#fff;transform:translateY(-2px);box-shadow:0 16px 40px rgba(245,200,66,.3)}
+.btn-o{background:rgba(255,255,255,.05);color:#fff;border:1px solid rgba(255,255,255,.14);padding:14px 32px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Syne',sans-serif;transition:all .25s}
+.btn-o:hover{background:rgba(255,255,255,.1);transform:translateY(-2px)}
+.hstats{position:absolute;bottom:48px;left:64px;z-index:2;display:flex;gap:0;opacity:0;animation:fu .8s 1.2s forwards}
+.hstat{text-align:left;padding-right:36px;border-right:1px solid var(--border)}
+.hstat:nth-child(2){padding:0 36px}
+.hstat:last-child{border-right:none;padding-left:36px;padding-right:0}
+.hstat-n{font-size:30px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1}
+.hstat-n span{color:var(--gold)}
+.hstat-l{font-size:10px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-top:4px;font-family:'Space Mono',monospace}
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.7)}}
+
+/* MARQUEE */
+.mband{background:var(--gold);padding:12px 0;overflow:hidden}
+.minner{display:flex;animation:ms 30s linear infinite;width:max-content}
+.mitem{white-space:nowrap;padding:0 30px;font-size:10px;font-weight:700;color:#000;letter-spacing:2px;text-transform:uppercase;font-family:'Space Mono',monospace;display:flex;align-items:center;gap:12px}
+.mitem::before{content:'◆';font-size:6px}
+@keyframes ms{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTION BASE */
+section{padding:120px 64px}
+.tag{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-family:'Space Mono',monospace}
+.tag::before{content:'';flex:0 0 22px;height:1px;background:var(--gold)}
+.stitle{font-size:clamp(32px,3.5vw,52px);font-weight:800;color:#fff;letter-spacing:-1.5px;line-height:1.06}
+.ssub{font-size:12px;color:var(--text2);line-height:1.75;max-width:480px;margin-top:12px;font-family:'Space Mono',monospace}
+
+/* HOW IT WORKS */
+#how{background:var(--ink2);padding:120px 0 0}
+.how-top{padding:0 64px 80px}
+#pipe-canvas{display:block;width:100%;height:480px;cursor:grab}
+#pipe-canvas:active{cursor:grabbing}
+.pipe-hint{text-align:center;padding:16px 0 48px;font-size:10px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;font-family:'Space Mono',monospace;display:flex;align-items:center;justify-content:center;gap:12px}
+.pipe-hint::before,.pipe-hint::after{content:'';flex:0 0 40px;height:1px;background:var(--border)}
+.how-strip{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border)}
+.how-step{padding:40px 32px;border-right:1px solid var(--border);transition:background .3s}
+.how-step:last-child{border-right:none}
+.how-step:hover{background:rgba(255,255,255,.018)}
+.hs-num{font-size:44px;font-weight:800;color:rgba(100,130,220,.18);font-family:'Space Mono',monospace;line-height:1;margin-bottom:14px;transition:color .3s}
+.how-step:hover .hs-num{color:rgba(245,200,66,.5)}
+.hs-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:8px}
+.hs-desc{font-size:11px;color:var(--text2);line-height:1.7;font-family:'Space Mono',monospace}
+
+/* SCHEMES */
+#schemes{background:var(--ink)}
+.frow{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
+.pill{padding:7px 18px;border-radius:100px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--text2);background:transparent;font-family:'Syne',sans-serif;transition:all .2s}
+.pill.on,.pill:hover{background:var(--gold);color:#000;border-color:var(--gold)}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
+.scheme-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:26px;cursor:pointer;transition:all .35s;opacity:0;transform:translateY(22px)}
+.scheme-card.vis{opacity:1;transform:none}
+.scheme-card:hover{transform:translateY(-5px)!important;border-color:rgba(245,200,66,.2);box-shadow:0 24px 56px rgba(0,0,0,.6)}
+.sc-min{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;font-family:'Space Mono',monospace}
+.sc-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:7px;line-height:1.25}
+.sc-desc{font-size:11px;color:var(--text2);line-height:1.65;font-family:'Space Mono',monospace;margin-bottom:20px}
+.sc-nums{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sc-num{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.sc-num-v{font-size:16px;font-weight:800;color:#fff}
+.sc-num-v small{font-size:11px;font-weight:400;color:var(--text2)}
+.sc-num-l{font-size:9px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-top:2px;font-family:'Space Mono',monospace}
+.tag-s{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:600;font-family:'Space Mono',monospace}
+.ta{background:rgba(0,255,157,.07);color:var(--green);border:1px solid rgba(0,255,157,.18)}
+.tr{background:rgba(245,200,66,.07);color:var(--gold);border:1px solid rgba(245,200,66,.18)}
+.tf{background:rgba(255,71,87,.07);color:var(--red);border:1px solid rgba(255,71,87,.18)}
+.sd{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pd 2s infinite}
+
+/* DASHBOARD */
+#dashboard{background:var(--ink2)}
+.dinner{max-width:1200px;margin:64px auto 0}
+.dtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:14px}
+.dtitle{font-size:22px;font-weight:800;color:#fff}
+.dmeta{font-size:11px;color:var(--text2);font-family:'Space Mono',monospace;margin-top:3px}
+.dbtns{display:flex;gap:10px}
+.db{padding:8px 18px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Syne',sans-serif}
+.dbo{background:transparent;border:1px solid var(--border);color:var(--text2);transition:all .2s}
+.dbo:hover{border-color:var(--gold);color:var(--gold)}
+.dbs{background:var(--gold);border:none;color:#000}
+.dbs:hover{background:#fff}
+.dgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.dc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;overflow:hidden}
+.dlabel{font-size:10px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.dbadge{padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600}
+.bup{background:rgba(0,255,157,.1);color:var(--green)}
+.bdn{background:rgba(255,71,87,.1);color:var(--red)}
+.dnum{font-size:40px;font-weight:800;color:#fff;letter-spacing:-1.5px;line-height:1}
+.dnum span{color:var(--gold)}
+.dsub{font-size:11px;color:var(--text2);margin-top:6px;font-family:'Space Mono',monospace}
+.mbars{display:flex;align-items:flex-end;gap:3px;height:48px;margin-top:18px}
+.mb{flex:1;border-radius:2px 2px 0 0;background:rgba(245,200,66,.13);transition:background .3s}
+.mb:hover,.mb.hi{background:var(--gold)}
+.alerts{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.arow{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:7px;background:rgba(255,255,255,.02);border:1px solid var(--border)}
+.adot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:2px}
+.atxt{font-size:11px;color:var(--text);font-family:'Space Mono',monospace;flex:1;line-height:1.4}
+.atime{font-size:10px;color:var(--text2);font-family:'Space Mono',monospace;white-space:nowrap}
+.map-row{grid-column:1/-1;position:relative;height:460px;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+#india-map{width:100%;height:100%;background:#0a1020}
+.map-overlay-legend{position:absolute;bottom:20px;left:20px;z-index:500;background:rgba(6,8,16,.92);border:1px solid var(--border);border-radius:10px;padding:14px 18px;backdrop-filter:blur(10px)}
+.mleg-title{font-size:10px;font-weight:700;color:#fff;letter-spacing:2px;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:10px}
+.mleg-item{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--text2);font-family:'Space Mono',monospace;margin-bottom:7px}
+.mleg-item:last-child{margin-bottom:0}
+.mleg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.map-overlay-info{position:absolute;top:20px;right:20px;z-index:500;background:rgba(6,8,16,.92);border:1px solid var(--border);border-radius:10px;padding:14px 18px;backdrop-filter:blur(10px)}
+.minfo-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px}
+.minfo-sub{font-size:10px;color:var(--text2);font-family:'Space Mono',monospace;line-height:1.5}
+.map-overlay-stats{position:absolute;bottom:20px;right:20px;z-index:500;display:flex;gap:10px}
+.mstat{background:rgba(6,8,16,.92);border:1px solid var(--border);border-radius:8px;padding:10px 14px;backdrop-filter:blur(10px);text-align:center}
+.mstat-v{font-size:18px;font-weight:800;color:#fff}
+.mstat-l{font-size:9px;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase;font-family:'Space Mono',monospace;margin-top:2px}
+
+/* FEATURES */
+#features{background:var(--ink)}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:60px}
+.fc{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:30px;transition:all .35s;opacity:0;transform:translateY(18px)}
+.fc.vis{opacity:1;transform:none}
+.fc:hover{border-color:rgba(245,200,66,.18);transform:translateY(-4px)!important}
+.fc-icon{font-size:26px;margin-bottom:16px}
+.fc h3{font-size:17px;font-weight:700;color:#fff;margin-bottom:8px}
+.fc p{font-size:11px;color:var(--text2);line-height:1.7;font-family:'Space Mono',monospace}
+.fc-link{display:inline-block;margin-top:14px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-family:'Space Mono',monospace}
+
+/* CTA */
+#cta{background:var(--ink);text-align:center;padding:160px 64px;position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(rgba(245,200,66,.045),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.cta-inner{position:relative;z-index:1;max-width:640px;margin:0 auto}
+.cta-inner h2{font-size:clamp(36px,4.5vw,60px);font-weight:800;color:#fff;letter-spacing:-2px;margin-bottom:16px}
+.cta-inner h2 em{color:var(--gold);font-style:normal}
+.cta-inner p{font-size:13px;color:var(--text2);line-height:1.7;font-family:'Space Mono',monospace;margin-bottom:38px}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* FOOTER */
+footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64px}
+.fg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;max-width:1200px;margin:0 auto 44px}
+.flogo{font-size:20px;font-weight:800;color:#fff;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.fdesc{font-size:11px;color:var(--text2);line-height:1.7;font-family:'Space Mono',monospace;max-width:240px}
+.fcol h4{font-size:10px;font-weight:700;color:#fff;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;font-family:'Space Mono',monospace}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.fcol a{font-size:12px;color:var(--text2);text-decoration:none;transition:color .2s;font-family:'Space Mono',monospace}
+.fcol a:hover{color:var(--gold)}
+.fbot{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:22px;font-size:10px;color:var(--text2);font-family:'Space Mono',monospace}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.rv.vis{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+#live-t{color:var(--green)}
+
+@media(max-width:900px){
+  nav{padding:16px 20px}.nav-links{display:none}
+  section{padding:80px 20px}
+  #how{padding:80px 0 0}.how-top{padding:0 20px 48px}
+  .how-strip{grid-template-columns:1fr 1fr}
+  .sgrid{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}
+  .dgrid{grid-template-columns:1fr}.fg{grid-template-columns:1fr 1fr}
+  .hero-content{padding:0 22px}.hstats{left:22px}
+  #pipe-canvas{height:340px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo"><div class="logo-sq">G</div>GovWatch</a>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#schemes">Schemes</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#features">Features</a></li>
+  </ul>
+  <button class="nav-cta">Request Access →</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-grad"></div>
+  <div class="hero-content">
+    <div class="badge"><span class="bdot"></span>Live System — 748 Schemes Active</div>
+    <h1 class="htitle">Track Every<br><em>Government Scheme</em><br>In Real Time</h1>
+    <p class="hsub">India's most advanced platform for transparent monitoring, fund flow analysis, and implementation tracking across all central ministries.</p>
+    <div class="hbtns">
+      <button class="btn-g">Explore Dashboard</button>
+      <button class="btn-o">Watch Demo ▶</button>
+    </div>
+  </div>
+  <div class="hstats">
+    <div class="hstat"><div class="hstat-n"><span id="hc1">0</span>+</div><div class="hstat-l">Active Schemes</div></div>
+    <div class="hstat"><div class="hstat-n">₹<span id="hc2">0</span><span>L Cr</span></div><div class="hstat-l">Funds Tracked</div></div>
+    <div class="hstat"><div class="hstat-n"><span id="hc3">0</span>%</div><div class="hstat-l">Implementation Rate</div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mband">
+  <div class="minner">
+    <span class="mitem">PM Kisan Samman Nidhi</span><span class="mitem">Ayushman Bharat</span><span class="mitem">PM Awas Yojana</span><span class="mitem">MGNREGA</span><span class="mitem">Jal Jeevan Mission</span><span class="mitem">PM Ujjwala Yojana</span><span class="mitem">Swachh Bharat Mission</span><span class="mitem">Digital India</span><span class="mitem">Skill India</span><span class="mitem">Make in India</span>
+    <span class="mitem">PM Kisan Samman Nidhi</span><span class="mitem">Ayushman Bharat</span><span class="mitem">PM Awas Yojana</span><span class="mitem">MGNREGA</span><span class="mitem">Jal Jeevan Mission</span><span class="mitem">PM Ujjwala Yojana</span><span class="mitem">Swachh Bharat Mission</span><span class="mitem">Digital India</span><span class="mitem">Skill India</span><span class="mitem">Make in India</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="how-top">
+    <div class="tag rv">How It Works</div>
+    <h2 class="stitle rv d1">From Data to Accountability</h2>
+    <p class="ssub rv d2">Drag to rotate. Watch data flow through the pipeline in real time.</p>
+  </div>
+  <canvas id="pipe-canvas"></canvas>
+  <div class="pipe-hint">← drag to rotate · scroll to zoom →</div>
+  <div class="how-strip">
+    <div class="how-step rv"><div class="hs-num">01</div><div class="hs-title">Data Aggregation</div><div class="hs-desc">40+ portals, ministry APIs & DBT systems pulled every 5 minutes automatically.</div></div>
+    <div class="how-step rv d1"><div class="hs-num">02</div><div class="hs-title">AI Analysis</div><div class="hs-desc">ML models detect anomalies, predict bottlenecks, and surface fund leakages in real time.</div></div>
+    <div class="how-step rv d2"><div class="hs-num">03</div><div class="hs-title">Visual Intelligence</div><div class="hs-desc">Live dashboards, district maps, and fund flow diagrams updated every refresh cycle.</div></div>
+    <div class="how-step rv d3"><div class="hs-num">04</div><div class="hs-title">Alerts & Reports</div><div class="hs-desc">Auto-alerts for fund stagnation and RTI-ready compliance reports on demand.</div></div>
+  </div>
+</section>
+
+<!-- SCHEMES -->
+<section id="schemes">
+  <div class="tag rv">Live Schemes</div>
+  <h2 class="stitle rv d1">Monitor Every Programme</h2>
+  <div class="frow rv d2">
+    <button class="pill on" onclick="fp(this,'')">All</button>
+    <button class="pill" onclick="fp(this,'Agriculture')">Agriculture</button>
+    <button class="pill" onclick="fp(this,'Health')">Health</button>
+    <button class="pill" onclick="fp(this,'Housing')">Housing</button>
+    <button class="pill" onclick="fp(this,'Rural Dev')">Rural Dev</button>
+  </div>
+  <div class="sgrid" id="scheme-grid">
+    <!-- Populated by API on load -->
+    <div class="scheme-card"><div class="sc-min">🌾 Ministry of Agriculture</div><div class="sc-title">PM Kisan Samman Nidhi</div><div class="sc-desc">₹6,000/year direct income support to small & marginal farmers via DBT across all states.</div><div class="sc-nums"><div class="sc-num"><div class="sc-num-v">11.8<small>Cr</small></div><div class="sc-num-l">Beneficiaries</div></div><div class="sc-num"><div class="sc-num-v">₹2.8<small>L Cr</small></div><div class="sc-num-l">Disbursed</div></div></div><span class="tag-s ta"><span class="sd"></span>Active — 98.2%</span></div>
+    <div class="scheme-card"><div class="sc-min">🏥 Ministry of Health</div><div class="sc-title">Ayushman Bharat PM-JAY</div><div class="sc-desc">₹5 lakh/family/year health coverage for secondary and tertiary care hospitalisations.</div><div class="sc-nums"><div class="sc-num"><div class="sc-num-v">24.9<small>Cr</small></div><div class="sc-num-l">Cards Issued</div></div><div class="sc-num"><div class="sc-num-v">6.1<small>Cr</small></div><div class="sc-num-l">Hospitalisations</div></div></div><span class="tag-s ta"><span class="sd"></span>Active — 87.1%</span></div>
+    <div class="scheme-card"><div class="sc-min">🏗️ Ministry of Housing</div><div class="sc-title">PM Awas Yojana Urban</div><div class="sc-desc">Affordable housing for urban poor through credit-linked subsidy.</div><div class="sc-nums"><div class="sc-num"><div class="sc-num-v">118<small>L</small></div><div class="sc-num-l">Sanctioned</div></div><div class="sc-num"><div class="sc-num-v">83<small>L</small></div><div class="sc-num-l">Completed</div></div></div><span class="tag-s tr"><span class="sd"></span>Under Review — 72%</span></div>
+    <div class="scheme-card"><div class="sc-min">💧 Jal Shakti Ministry</div><div class="sc-title">Jal Jeevan Mission</div><div class="sc-desc">Functional household tap connections to every rural household.</div><div class="sc-nums"><div class="sc-num"><div class="sc-num-v">14.2<small>Cr</small></div><div class="sc-num-l">Connections</div></div><div class="sc-num"><div class="sc-num-v">₹3.6<small>L Cr</small></div><div class="sc-num-l">Budget</div></div></div><span class="tag-s tf"><span class="sd"></span>Flagged — 73.5%</span></div>
+    <div class="scheme-card"><div class="sc-min">💼 Ministry of Labour</div><div class="sc-title">MGNREGA</div><div class="sc-desc">Guaranteed 100 days of wage employment per year to rural households.</div><div class="sc-nums"><div class="sc-num"><div class="sc-num-v">15.4<small>Cr</small></div><div class="sc-num-l">Active Workers</div></div><div class="sc-num"><div class="sc-num-v">₹89<small>K Cr</small></div><div class="sc-num-l">Wages Paid</div></div></div><span class="tag-s ta"><span class="sd"></span>Active — 94%</span></div>
+    <div class="scheme-card"><div class="sc-min">⚡ Ministry of Power</div><div class="sc-title">PM Ujjwala Yojana</div><div class="sc-desc">Free LPG connections to women from BPL households.</div><div class="sc-nums"><div class="sc-num"><div class="sc-num-v">9.6<small>Cr</small></div><div class="sc-num-l">Connections</div></div><div class="sc-num"><div class="sc-num-v">₹14.2<small>K Cr</small></div><div class="sc-num-l">Subsidies</div></div></div><span class="tag-s ta"><span class="sd"></span>Active — 91%</span></div>
+  </div>
+</section>
+
+<!-- DASHBOARD + MAP -->
+<section id="dashboard">
+  <div class="tag rv">Live Dashboard</div>
+  <h2 class="stitle rv d1">Real-Time Intelligence<br>At Every Level</h2>
+  <div class="dinner">
+    <div class="dtop rv d2">
+      <div><div class="dtitle">National Scheme Monitor</div><div class="dmeta">IST <span id="live-t">--:--:--</span> · Auto-refresh 5 min</div></div>
+      <div class="dbtns"><button class="db dbo">Export Report</button><button class="db dbs">Live View →</button></div>
+    </div>
+    <div class="dgrid rv d3">
+      <div class="dc">
+        <div class="dlabel">Active Schemes <span class="dbadge bup" id="schemes-badge">+4.2%</span></div>
+        <div class="dnum"><span id="dc1">0</span>+</div>
+        <div class="dsub">Central + State schemes</div>
+        <div class="mbars" id="mb1"></div>
+      </div>
+      <div class="dc">
+        <div class="dlabel">Funds Tracked <span class="dbadge bup">+12%</span></div>
+        <div class="dnum">₹<span id="dc2">0</span><span style="font-size:22px;color:var(--text2)">L Cr</span></div>
+        <div class="dsub">Under active monitoring</div>
+        <div class="mbars" id="mb2"></div>
+      </div>
+      <div class="dc">
+        <div class="dlabel">Alert Centre <span class="dbadge bdn" id="alert-badge">14 Active</span></div>
+        <div class="alerts" id="alert-list">
+          <div class="arow"><div class="adot" style="background:var(--red)"></div><div class="atxt">Fund stagnation: JJM — Rajasthan (₹420 Cr)</div><div class="atime">2h</div></div>
+          <div class="arow"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Target miss risk: PMAY Urban — UP</div><div class="atime">4h</div></div>
+          <div class="arow"><div class="adot" style="background:var(--red)"></div><div class="atxt">DBT failure spike: PM Kisan — Bihar</div><div class="atime">6h</div></div>
+          <div class="arow"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Data gap: MGNREGA — Jharkhand</div><div class="atime">8h</div></div>
+          <div class="arow"><div class="adot" style="background:var(--cyan)"></div><div class="atxt">Q3 compliance ready: 52 schemes</div><div class="atime">12h</div></div>
+        </div>
+      </div>
+      <div class="map-row">
+        <div id="india-map"></div>
+        <div class="map-overlay-legend">
+          <div class="mleg-title">State Performance</div>
+          <div class="mleg-item"><div class="mleg-dot" style="background:var(--green)"></div>On-track (&gt;85%)</div>
+          <div class="mleg-item"><div class="mleg-dot" style="background:var(--gold)"></div>Under review (60–85%)</div>
+          <div class="mleg-item"><div class="mleg-dot" style="background:var(--red)"></div>Flagged (&lt;60%)</div>
+        </div>
+        <div class="map-overlay-info">
+          <div class="minfo-title">🗺️ India Scheme Map</div>
+          <div class="minfo-sub">Click any state marker for details<br>Scroll to zoom · Drag to pan</div>
+        </div>
+        <div class="map-overlay-stats">
+          <div class="mstat"><div class="mstat-v" id="stat-ontrack" style="color:var(--green)">21</div><div class="mstat-l">On Track</div></div>
+          <div class="mstat"><div class="mstat-v" id="stat-review"  style="color:var(--gold)">9</div><div class="mstat-l">Review</div></div>
+          <div class="mstat"><div class="mstat-v" id="stat-flagged" style="color:var(--red)">6</div><div class="mstat-l">Flagged</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="tag rv">Platform Capabilities</div>
+  <h2 class="stitle rv d1">Everything You Need<br>to Govern Smarter</h2>
+  <div class="fgrid">
+    <div class="fc"><div class="fc-icon">🔴</div><h3>Real-Time Data Sync</h3><p>Live integration with 40+ portals including DBT Bharat, NIC APIs, PFMS, and state MIS systems. 5-minute refresh cycle.</p><span class="fc-link">→ Live monitoring</span></div>
+    <div class="fc"><div class="fc-icon">🗺️</div><h3>District-Level Drill-Down</h3><p>Interactive maps for every scheme at state, district, and block level. Identify geographic gaps in seconds.</p><span class="fc-link">→ 740+ districts</span></div>
+    <div class="fc"><div class="fc-icon">🤖</div><h3>AI Anomaly Detection</h3><p>ML models trained on 10 years of scheme data auto-flag fund stagnation, leakage, and implementation failure.</p><span class="fc-link">→ Predictive alerts</span></div>
+    <div class="fc"><div class="fc-icon">📊</div><h3>Fund Flow Visualisation</h3><p>Sankey diagrams showing fund movement from Union budget through state treasuries to last-mile beneficiaries.</p><span class="fc-link">→ End-to-end tracking</span></div>
+    <div class="fc"><div class="fc-icon">📋</div><h3>Compliance Reporting</h3><p>Auto-generated reports for PAC, CAG, parliamentary committees, and RTI responses. One click, fully formatted.</p><span class="fc-link">→ Audit-ready</span></div>
+    <div class="fc"><div class="fc-icon">🔐</div><h3>Role-Based Access</h3><p>Granular permissions for PMO, ministries, state governments, collectors, and civil society. Fully DPDP-compliant.</p><span class="fc-link">→ Enterprise security</span></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner rv">
+    <div class="tag" style="justify-content:center">Get Started</div>
+    <h2>Bring <em>Accountability</em><br>to Every Rupee</h2>
+    <p>Join 200+ government officers already using GovWatch to track implementation, detect leakages, and drive better outcomes across India's development programmes.</p>
+    <div class="cta-btns"><button class="btn-g">Request a Demo →</button><button class="btn-o">Download Brochure</button></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fg">
+    <div><div class="flogo"><div class="logo-sq">G</div>GovWatch</div><p class="fdesc">India's most advanced platform for transparent monitoring of government schemes, fund flows, and implementation progress.</p></div>
+    <div class="fcol"><h4>Platform</h4><ul><li><a href="#">Dashboard</a></li><li><a href="#">Scheme Browser</a></li><li><a href="#">Fund Tracker</a></li><li><a href="#">Alert Centre</a></li></ul></div>
+    <div class="fcol"><h4>Ministries</h4><ul><li><a href="#">Agriculture</a></li><li><a href="#">Health</a></li><li><a href="#">Rural Dev</a></li><li><a href="#">Housing</a></li></ul></div>
+    <div class="fcol"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Privacy</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="fbot"><span>© 2025 GovWatch Technologies Pvt. Ltd. — Made in India 🇮🇳</span><span>ISO 27001 · DPDP Compliant · NIC Certified</span></div>
+</footer>
+
+<script>
+/* ════════ HERO THREE.JS ════════ */
+(()=>{
+  const c=document.getElementById('hero-canvas');
+  const r=new THREE.WebGLRenderer({canvas:c,antialias:true,alpha:true});
+  r.setPixelRatio(Math.min(devicePixelRatio,2));r.setSize(innerWidth,innerHeight);
+  const sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,1000);
+  cam.position.z=5;
+  const N=3000,geo=new THREE.BufferGeometry(),pos=new Float32Array(N*3),col=new Float32Array(N*3);
+  for(let i=0;i<N;i++){
+    const t=Math.random()*Math.PI*2,p=Math.acos(2*Math.random()-1),rr=2+Math.random()*10;
+    pos[i*3]=rr*Math.sin(p)*Math.cos(t);pos[i*3+1]=rr*Math.sin(p)*Math.sin(t);pos[i*3+2]=rr*Math.cos(p);
+    const c2=Math.random();
+    if(c2<.4){col[i*3]=.96;col[i*3+1]=.78;col[i*3+2]=.26;}
+    else if(c2<.65){col[i*3]=0;col[i*3+1]=.9;col[i*3+2]=1;}
+    else{col[i*3]=.3;col[i*3+1]=.38;col[i*3+2]=.75;}
+  }
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+  const pts=new THREE.Points(geo,new THREE.PointsMaterial({size:.028,vertexColors:true,transparent:true,opacity:.65,sizeAttenuation:true}));
+  pts.position.x=3;sc.add(pts);
+  const globe=new THREE.Mesh(new THREE.SphereGeometry(1.6,24,24),new THREE.MeshBasicMaterial({color:0x1a2550,wireframe:true,transparent:true,opacity:.18}));
+  globe.position.x=3;sc.add(globe);
+  [{r:1.65,x:.4},{r:2.05,x:.7}].forEach((cfg,i)=>{
+    const m=new THREE.Mesh(new THREE.TorusGeometry(cfg.r,.003,2,120),new THREE.MeshBasicMaterial({color:i===0?0xf5c842:0x00e5ff,transparent:true,opacity:i===0?.35:.15}));
+    m.position.x=3;m.rotation.x=cfg.x;m.userData.s=.002+i*.001;sc.add(m);
+  });
+  let mx=0,my=0;
+  addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5);my=(e.clientY/innerHeight-.5);});
+  addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();r.setSize(innerWidth,innerHeight);});
+  (function loop(){requestAnimationFrame(loop);const t=Date.now()*.001;pts.rotation.y=t*.03;globe.rotation.y=t*.06;cam.position.x+=(mx*.4-cam.position.x)*.04;cam.position.y+=(-my*.3-cam.position.y)*.04;cam.lookAt(0,0,0);sc.children.forEach(c=>{if(c.userData.s)c.rotation.z+=c.userData.s;});r.render(sc,cam);})();
+})();
+
+/* ════════ 3D PIPELINE ════════ */
+function initPipeline(){
+  const canvas=document.getElementById('pipe-canvas');
+  const rect=canvas.getBoundingClientRect();
+  const W=rect.width||canvas.offsetWidth||window.innerWidth;
+  const H=rect.height||canvas.offsetHeight||480;
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(W,H);renderer.shadowMap.enabled=true;
+  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,W/H,.1,200);
+  camera.position.set(0,4,18);camera.lookAt(0,0,0);
+  scene.fog=new THREE.FogExp2(0x060810,0.025);
+  scene.add(new THREE.AmbientLight(0x1a2550,1.2));
+  const pLight=new THREE.PointLight(0xf5c842,2,30);pLight.position.set(0,6,4);scene.add(pLight);
+  const cLight=new THREE.PointLight(0x00e5ff,1.5,25);cLight.position.set(-8,4,2);scene.add(cLight);
+  const gLight=new THREE.PointLight(0x00ff9d,1.5,25);gLight.position.set(8,4,2);scene.add(gLight);
+  const plat=new THREE.Mesh(new THREE.BoxGeometry(24,.08,6),new THREE.MeshPhongMaterial({color:0x0d1530,transparent:true,opacity:.6}));
+  plat.position.y=-2.8;plat.receiveShadow=true;scene.add(plat);
+  const grid=new THREE.GridHelper(24,24,0x1a2550,0x111828);grid.position.y=-2.74;scene.add(grid);
+  function rr(w,h,r){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s;}
+  function tex(lines,opts){const{w=256,h=256,fgLines=[],font='Syne',size=22,bold=true}=opts||{};const cv=document.createElement('canvas');cv.width=w;cv.height=h;const ctx=cv.getContext('2d');lines.forEach((l,i)=>{ctx.fillStyle=fgLines[i]||'#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`${bold?'700':'400'} ${size}px ${font}`;ctx.fillText(l,w/2,h/2+(i-(lines.length-1)/2)*(size*1.4));});return new THREE.CanvasTexture(cv);}
+  const STEPS=[{label:'Data\nAggregation',color:0xf5c842,metrics:['42 Portals','4.8M /day','5 min sync'],icon:'🌐',x:-8},{label:'AI\nAnalysis',color:0x00e5ff,metrics:['18 Models','247 Flags','94.7% Acc'],icon:'🤖',x:-2.5},{label:'Visual\nIntel',color:0x00ff9d,metrics:['52 Dashes','742 Dists','1.2K Charts'],icon:'📊',x:2.5},{label:'Alerts &\nReports',color:0xf5c842,metrics:['1.8K Alerts','6.2K Docs','<2 Min'],icon:'🔔',x:8}];
+  const cardGroup=new THREE.Group();scene.add(cardGroup);
+  STEPS.forEach((step,si)=>{
+    const grp=new THREE.Group();grp.position.x=step.x;
+    grp.add(new THREE.Mesh(new THREE.ShapeGeometry(rr(4.2,4.8,.25)),new THREE.MeshPhongMaterial({color:0x0e1730,transparent:true,opacity:.88,emissive:new THREE.Color(step.color).multiplyScalar(.04)})));
+    grp.add(new THREE.Mesh(new THREE.ShapeGeometry(rr(4.3,4.9,.28)),new THREE.MeshBasicMaterial({color:step.color,transparent:true,opacity:.18,side:THREE.BackSide})));
+    const bs=new THREE.Shape();bs.moveTo(-1.85,2.1);bs.lineTo(1.85,2.1);bs.quadraticCurveTo(2.1,2.1,2.1,1.85);bs.lineTo(2.1,1.82);bs.lineTo(-2.1,1.82);bs.lineTo(-2.1,1.85);bs.quadraticCurveTo(-2.1,2.1,-1.85,2.1);
+    const bar=new THREE.Mesh(new THREE.ShapeGeometry(bs),new THREE.MeshBasicMaterial({color:step.color}));bar.position.z=.01;grp.add(bar);
+    const badge=new THREE.Mesh(new THREE.CircleGeometry(.28,32),new THREE.MeshBasicMaterial({map:tex([`0${si+1}`],{w:80,h:80,size:28,fgLines:['#000']}),color:step.color}));badge.position.set(-1.55,1.96,.02);grp.add(badge);
+    const im=new THREE.Mesh(new THREE.PlaneGeometry(.7,.7),new THREE.MeshBasicMaterial({map:tex([step.icon],{w:80,h:80,size:36,fgLines:['#fff']}),transparent:true}));im.position.set(0,.85,.01);grp.add(im);
+    step.label.split('\n').forEach((l,li)=>{const lm=new THREE.Mesh(new THREE.PlaneGeometry(3.2,.44),new THREE.MeshBasicMaterial({map:tex([l],{w:320,h:56,size:24}),transparent:true}));lm.position.set(0,.24-li*.46,.01);grp.add(lm);});
+    step.metrics.forEach((m,mi)=>{
+      const y=-.55-mi*.72;
+      const mb=new THREE.Mesh(new THREE.ShapeGeometry(rr(3.6,.54,.08)),new THREE.MeshBasicMaterial({color:0x111f40,transparent:true,opacity:.7}));mb.position.set(0,y,.015);grp.add(mb);
+      const al=new THREE.Mesh(new THREE.PlaneGeometry(.04,.42),new THREE.MeshBasicMaterial({color:step.color,transparent:true,opacity:.8}));al.position.set(-1.76,y,.02);grp.add(al);
+      const mm=new THREE.Mesh(new THREE.PlaneGeometry(2.8,.42),new THREE.MeshBasicMaterial({map:tex([m],{w:280,h:52,size:18,fgLines:[`#${step.color.toString(16).padStart(6,'0')}`]}),transparent:true}));mm.position.set(.1,y,.02);grp.add(mm);
+    });
+    const pb=new THREE.Mesh(new THREE.PlaneGeometry(3.6,.09),new THREE.MeshBasicMaterial({color:0x1a2550}));pb.position.set(0,-2.22,.015);grp.add(pb);
+    const pct=[.92,.87,.88,.95][si];const pf=new THREE.Mesh(new THREE.PlaneGeometry(3.6*pct,.09),new THREE.MeshBasicMaterial({color:step.color}));pf.position.set(-3.6*(1-pct)/2,-2.22,.02);grp.add(pf);
+    const gm=new THREE.Mesh(new THREE.SphereGeometry(.1,16,16),new THREE.MeshBasicMaterial({color:step.color}));gm.position.set(1.9,-2.2,.01);grp.add(gm);
+    cardGroup.add(grp);
+  });
+  const streamGroup=new THREE.Group();scene.add(streamGroup);
+  const SC=[0xf5c842,0x00e5ff,0x00ff9d];
+  [-5.25,0,5.25].forEach((xm,i)=>{
+    const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(xm-2.35,0,.1),new THREE.Vector3(xm,1.2,.5),new THREE.Vector3(xm+2.35,0,.1)]);
+    streamGroup.add(new THREE.Mesh(new THREE.TubeGeometry(curve,32,.025,8,false),new THREE.MeshBasicMaterial({color:SC[i],transparent:true,opacity:.5})));
+    for(let p=0;p<3;p++){const tr=new THREE.Mesh(new THREE.SphereGeometry(.07,8,8),new THREE.MeshBasicMaterial({color:SC[i],transparent:true,opacity:1}));tr.userData={curve,offset:p/3,speed:.004+Math.random()*.002};streamGroup.add(tr);}
+  });
+  const pg=new THREE.BufferGeometry();const pp=new Float32Array(200*3),pc=new Float32Array(200*3);
+  for(let i=0;i<200;i++){pp[i*3]=(Math.random()-.5)*24;pp[i*3+1]=(Math.random()-.5)*10;pp[i*3+2]=(Math.random()-.5)*6-1;const c2=Math.random();if(c2<.33){pc[i*3]=.96;pc[i*3+1]=.78;pc[i*3+2]=.26;}else if(c2<.66){pc[i*3]=0;pc[i*3+1]=.9;pc[i*3+2]=1;}else{pc[i*3]=0;pc[i*3+1]=1;pc[i*3+2]=.62;}}
+  pg.setAttribute('position',new THREE.BufferAttribute(pp,3));pg.setAttribute('color',new THREE.BufferAttribute(pc,3));
+  const parts=new THREE.Points(pg,new THREE.PointsMaterial({size:.05,vertexColors:true,transparent:true,opacity:.7}));scene.add(parts);
+  let isDown=false,lx=0,ly=0,rx=0.1,ry=0,trx=0.1,try_=0,zoom=18,tz=18;
+  canvas.addEventListener('mousedown',e=>{isDown=true;lx=e.clientX;ly=e.clientY;});
+  canvas.addEventListener('touchstart',e=>{isDown=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY;},{passive:true});
+  addEventListener('mouseup',()=>isDown=false);addEventListener('touchend',()=>isDown=false);
+  canvas.addEventListener('mousemove',e=>{if(!isDown)return;try_+=(e.clientX-lx)*.008;trx+=(e.clientY-ly)*.005;trx=Math.max(-.4,Math.min(.6,trx));lx=e.clientX;ly=e.clientY;});
+  canvas.addEventListener('touchmove',e=>{if(!isDown)return;try_+=(e.touches[0].clientX-lx)*.008;trx+=(e.touches[0].clientY-ly)*.005;lx=e.touches[0].clientX;ly=e.touches[0].clientY;},{passive:true});
+  canvas.addEventListener('wheel',e=>{tz=Math.max(8,Math.min(28,tz+e.deltaY*.02));e.preventDefault();},{passive:false});
+  addEventListener('resize',()=>{const nW=canvas.offsetWidth||window.innerWidth,nH=canvas.offsetHeight||480;renderer.setSize(nW,nH);camera.aspect=nW/nH;camera.updateProjectionMatrix();});
+  let t=0;
+  (function loop(){
+    requestAnimationFrame(loop);t+=.016;rx+=(trx-rx)*.08;ry+=(try_-ry)*.08;zoom+=(tz-zoom)*.08;
+    cardGroup.rotation.y=ry;cardGroup.rotation.x=rx;
+    if(!isDown)try_+=.003;
+    cardGroup.children.forEach((g,i)=>{g.position.y=Math.sin(t*.8+i*1.1)*.12;g.rotation.y=Math.sin(t*.3+i*.8)*.03;});
+    camera.position.z=zoom;camera.position.y=zoom*.22;camera.lookAt(0,0,0);
+    streamGroup.children.forEach(o=>{if(o.userData.curve){o.userData.offset=(o.userData.offset+o.userData.speed)%1;o.position.copy(o.userData.curve.getPoint(o.userData.offset));const f=o.userData.offset;o.material.opacity=f<.15?f/.15:f>.85?(1-f)/.15:1;}});
+    pLight.intensity=2+Math.sin(t*1.5)*.5;
+    streamGroup.rotation.y=cardGroup.rotation.y;streamGroup.rotation.x=cardGroup.rotation.x;
+    parts.rotation.y=t*.01;renderer.render(scene,camera);
+  })();
+}
+// FIX: use ResizeObserver — fires only when canvas has real pixel dimensions
+// This fixes blank canvas when opened as file:// or before layout is complete
+(function waitForCanvas(){
+  const canvas = document.getElementById('pipe-canvas');
+  let started = false;
+  function tryStart(){
+    if(started) return;
+    const W = canvas.getBoundingClientRect().width;
+    if(W > 10){ started = true; initPipeline(); }
+  }
+  // Try immediately, then on resize, then with a polling fallback
+  tryStart();
+  const ro = new ResizeObserver(tryStart);
+  ro.observe(canvas);
+  // Hard fallback: force-start after 500ms even if dimensions are weird
+  setTimeout(()=>{ if(!started){ started=true; initPipeline(); } }, 500);
+})();
+
+/* ════════ INDIA MAP ════════ */
+function initMap(){
+  const mapEl=document.getElementById('india-map');
+  if(!mapEl||mapEl._leaflet_id)return;
+  const map=L.map('india-map',{center:[22.5,82.5],zoom:5,zoomControl:true,scrollWheelZoom:true,minZoom:4,maxZoom:14});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
+  const states=[
+    {n:'Uttar Pradesh',lat:26.85,lng:80.91,p:71,s:['PM Kisan','JJM','PMAY'],b:'₹2.1L Cr',flag:true},
+    {n:'Maharashtra',lat:19.75,lng:75.71,p:88,s:['Ayushman','MGNREGA'],b:'₹1.8L Cr'},
+    {n:'Rajasthan',lat:27.02,lng:74.21,p:64,s:['JJM','PM Kisan'],b:'₹98K Cr',flag:true},
+    {n:'Madhya Pradesh',lat:22.97,lng:78.65,p:79,s:['PM Kisan','MGNREGA'],b:'₹1.1L Cr'},
+    {n:'Bihar',lat:25.09,lng:85.31,p:66,s:['PM Kisan','JJM'],b:'₹74K Cr',flag:true},
+    {n:'West Bengal',lat:23.58,lng:87.85,p:82,s:['Ayushman','PMAY'],b:'₹88K Cr'},
+    {n:'Tamil Nadu',lat:11.12,lng:78.65,p:91,s:['Ayushman','Ujjwala'],b:'₹1.2L Cr'},
+    {n:'Karnataka',lat:14.51,lng:75.71,p:89,s:['PM Kisan','Digital India'],b:'₹1.0L Cr'},
+    {n:'Gujarat',lat:22.25,lng:71.19,p:93,s:['PM Kisan','Ujjwala'],b:'₹1.3L Cr'},
+    {n:'Punjab',lat:31.14,lng:75.34,p:84,s:['PM Kisan','JJM'],b:'₹54K Cr'},
+    {n:'Haryana',lat:29.05,lng:76.09,p:87,s:['PM Kisan','Ayushman'],b:'₹62K Cr'},
+    {n:'Odisha',lat:20.94,lng:84.80,p:76,s:['MGNREGA','JJM'],b:'₹68K Cr'},
+    {n:'Telangana',lat:17.12,lng:79.01,p:90,s:['PM Kisan','Ayushman'],b:'₹72K Cr'},
+    {n:'Kerala',lat:10.84,lng:76.27,p:95,s:['Ayushman','JJM'],b:'₹48K Cr'},
+    {n:'Assam',lat:26.20,lng:92.94,p:72,s:['PM Kisan','JJM'],b:'₹42K Cr'},
+    {n:'Jharkhand',lat:23.61,lng:85.27,p:68,s:['MGNREGA','JJM'],b:'₹38K Cr',flag:true},
+    {n:'Chhattisgarh',lat:21.27,lng:81.86,p:77,s:['MGNREGA','Ayushman'],b:'₹44K Cr'},
+    {n:'Delhi',lat:28.61,lng:77.20,p:94,s:['Ayushman','PMAY'],b:'₹32K Cr'},
+    {n:'Himachal Pradesh',lat:31.90,lng:77.11,p:91,s:['JJM','PM Kisan'],b:'₹18K Cr'},
+    {n:'Uttarakhand',lat:30.06,lng:79.01,p:85,s:['PM Kisan','Ayushman'],b:'₹22K Cr'},
+    {n:'Andhra Pradesh',lat:15.91,lng:79.74,p:86,s:['PM Kisan','Ujjwala'],b:'₹82K Cr'},
+    {n:'Goa',lat:15.29,lng:74.12,p:96,s:['Ayushman','PMAY'],b:'₹12K Cr'},
+    {n:'Tripura',lat:23.94,lng:91.98,p:73,s:['MGNREGA','PM Kisan'],b:'₹14K Cr'},
+    {n:'Manipur',lat:24.66,lng:93.90,p:69,s:['MGNREGA','JJM'],b:'₹11K Cr'},
+    {n:'Meghalaya',lat:25.46,lng:91.36,p:74,s:['MGNREGA','JJM'],b:'₹12K Cr'},
+    {n:'Nagaland',lat:26.15,lng:94.56,p:67,s:['MGNREGA','JJM'],b:'₹9K Cr',flag:true},
+    {n:'Mizoram',lat:23.17,lng:92.94,p:78,s:['JJM','PM Kisan'],b:'₹8K Cr'},
+    {n:'Sikkim',lat:27.53,lng:88.51,p:88,s:['Ayushman','JJM'],b:'₹6K Cr'},
+    {n:'Arunachal Pradesh',lat:27.10,lng:93.62,p:71,s:['MGNREGA','JJM'],b:'₹12K Cr'},
+  ];
+  const gc=p=>p>=85?'#00ff9d':p>=60?'#f5c842':'#ff4757';
+  states.forEach(st=>{
+    const color=gc(st.p),size=st.p>=85?18:st.p>=60?16:14;
+    const icon=L.divIcon({className:'',html:`<div style="position:relative;width:${size}px;height:${size}px"><div style="width:100%;height:100%;border-radius:50%;background:${color};border:2px solid rgba(255,255,255,.25);box-shadow:0 0 10px ${color},0 0 20px ${color}55"></div><div style="position:absolute;inset:-6px;border-radius:50%;border:1px solid ${color}55;animation:gwRipple 2s ease-out infinite"></div></div>`,iconSize:[size,size],iconAnchor:[size/2,size/2]});
+    L.marker([st.lat,st.lng],{icon}).addTo(map).bindPopup(`<div style="font-family:'Syne',sans-serif;min-width:230px;background:#0e1830;color:#b8c4e8;border-radius:12px;overflow:hidden"><div style="background:${color}18;border-bottom:1px solid ${color}33;padding:14px 16px"><div style="font-size:10px;letter-spacing:2px;color:${color};text-transform:uppercase;margin-bottom:5px;font-family:'Space Mono',monospace">${st.p>=85?'✅ On Track':st.p>=60?'⚠️ Under Review':'🚨 Flagged'} — ${st.p}%</div><div style="font-size:20px;font-weight:800;color:#fff">${st.n}</div></div><div style="padding:14px 16px"><div style="font-size:9px;color:#4a5880;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;font-family:'Space Mono',monospace">Active Schemes</div><div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px">${st.s.map(x=>`<span style="background:#152040;border:1px solid #1e2d60;padding:3px 9px;border-radius:4px;font-size:10px;color:#b8c4e8;font-family:'Space Mono',monospace">${x}</span>`).join('')}</div><div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:9px;color:#4a5880;font-family:'Space Mono',monospace">Budget Tracked</div><div style="font-size:18px;font-weight:800;color:#fff">${st.b}</div></div><div style="width:48px;height:48px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000">${st.p}%</div></div><div style="margin-top:12px;background:#152040;border-radius:4px;height:4px;overflow:hidden"><div style="height:100%;width:${st.p}%;background:${color};border-radius:4px"></div></div>${st.flag?`<div style="margin-top:10px;padding:6px 10px;background:rgba(255,71,87,.08);border:1px solid rgba(255,71,87,.2);border-radius:6px;font-size:10px;color:#ff4757;font-family:'Space Mono',monospace">⚠ Escalated for immediate review</div>`:''}</div></div>`,{maxWidth:300,className:'gw-popup'});
+  });
+  const mapObs=new IntersectionObserver(e=>{if(e[0].isIntersecting){setTimeout(()=>map.invalidateSize(),100);mapObs.disconnect();}},{threshold:0.1});
+  mapObs.observe(mapEl);
+  const style=document.createElement('style');
+  style.textContent=`@keyframes gwRipple{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.8);opacity:0}}.gw-popup .leaflet-popup-content-wrapper{background:#0e1830!important;border:1px solid rgba(80,100,180,.2)!important;border-radius:14px!important;padding:0!important;box-shadow:0 20px 60px rgba(0,0,0,.8)!important}.gw-popup .leaflet-popup-content{margin:0!important;width:auto!important}.gw-popup .leaflet-popup-tip-container{display:none}.gw-popup .leaflet-popup-close-button{color:#4a5880!important;top:10px!important;right:10px!important;font-size:16px!important;z-index:10!important}.leaflet-control-zoom a{background:#0e1830!important;color:#b8c4e8!important;border:1px solid rgba(80,100,180,.2)!important}.leaflet-control-zoom a:hover{background:#152040!important;color:#fff!important}.leaflet-control-attribution{background:rgba(6,8,16,.8)!important;color:#2a3460!important;font-size:9px!important}`;
+  document.head.appendChild(style);
+}
+if(document.readyState==='complete'){initMap();}
+else{window.addEventListener('load',initMap);}
+
+/* ════════ SCROLL REVEAL ════════ */
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:.07,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv,.scheme-card,.fc').forEach(el=>obs.observe(el));
+
+/* ════════ COUNTERS ════════ */
+function cnt(id,tgt,dec=0){
+  const el=document.getElementById(id);if(!el)return;
+  let v=0,st=tgt/70;
+  const ti=setInterval(()=>{v=Math.min(v+st,tgt);el.textContent=dec?v.toFixed(1):Math.floor(v);if(v>=tgt)clearInterval(ti);},20);
+}
+
+/* ════════ NAV ════════ */
+addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('nav-scrolled',scrollY>60));
+
+/* ════════ MINI BARS ════════ */
+function mkBars(id,data){const el=document.getElementById(id);if(!el)return;const mx=Math.max(...data);data.forEach((v,i)=>{const b=document.createElement('div');b.className='mb'+(i===data.length-1?' hi':'');b.style.height=(v/mx*100)+'%';el.appendChild(b);});}
+mkBars('mb1',[320,380,410,390,440,460,520,500,560,580,620,748]);
+mkBars('mb2',[8.2,9.1,9.8,10.4,11.0,11.9,12.5,13.1,13.8,14.2,14.5,14.7]);
+
+/* ════════ LIVE TIME ════════ */
+function ut(){const n=new Date(),i=new Date(n.getTime()+5.5*3600000),el=document.getElementById('live-t');if(el)el.textContent=[i.getUTCHours(),i.getUTCMinutes(),i.getUTCSeconds()].map(x=>String(x).padStart(2,'0')).join(':')+' IST';}
+ut();setInterval(ut,1000);
+
+/* ════════ FILTER PILLS ════════ */
+function fp(b,cat){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));b.classList.add('on');loadSchemes(cat);}
+
+/* ════════ API BASE URL ════════ */
+// When you open http://localhost:3000 this points to your own server.
+// Change this if you deploy online (e.g. 'https://yourapp.com/api')
+const API='http://localhost:3000/api';
+
+/* ════════ LOAD STATS FROM API ════════ */
+async function loadStats(){
+  try{
+    const res=await fetch(`${API}/stats`);
+    const data=await res.json();
+    cnt('hc1',data.activeSchemes);
+    cnt('hc2',+(data.totalBudgetCr/100000).toFixed(1),1);
+    cnt('hc3',data.implRate,1);
+    cnt('dc1',data.activeSchemes);
+    cnt('dc2',+(data.totalBudgetCr/100000).toFixed(1),1);
+    const ot=document.getElementById('stat-ontrack');
+    const rv=document.getElementById('stat-review');
+    const fl=document.getElementById('stat-flagged');
+    if(ot)ot.textContent=data.states.onTrack;
+    if(rv)rv.textContent=data.states.underReview;
+    if(fl)fl.textContent=data.states.flagged;
+    const ab=document.getElementById('alert-badge');
+    if(ab)ab.textContent=`${data.activeAlerts} Active`;
+  }catch(e){
+    // API not running — fall back to static counters
+    setTimeout(()=>{cnt('hc1',748);cnt('hc2',24.7,1);cnt('hc3',82);},1300);
+    const dashObs=new IntersectionObserver(es=>{if(es[0].isIntersecting){cnt('dc1',748);cnt('dc2',24.7,1);dashObs.disconnect();}},{threshold:.2});
+    const dash=document.getElementById('dashboard');if(dash)dashObs.observe(dash);
+  }
+}
+
+/* ════════ LOAD ALERTS FROM API ════════ */
+async function loadAlerts(){
+  try{
+    const res=await fetch(`${API}/alerts?resolved=false`);
+    const alerts=await res.json();
+    const colors={error:'var(--red)',warning:'var(--gold)',info:'var(--cyan)'};
+    const container=document.getElementById('alert-list');
+    if(!container||!alerts.length)return;
+    container.innerHTML=alerts.slice(0,5).map(a=>{
+      const age=Math.round((Date.now()-new Date(a.created_at))/3600000);
+      const label=age<1?'now':age<24?`${age}h`:`${Math.round(age/24)}d`;
+      return `<div class="arow"><div class="adot" style="background:${colors[a.type]||'var(--gold)'}"></div><div class="atxt">${a.message}${a.state?' — '+a.state:''}</div><div class="atime">${label}</div></div>`;
+    }).join('');
+  }catch(e){console.warn('Alerts API unavailable.');}
+}
+
+/* ════════ LOAD SCHEMES FROM API ════════ */
+async function loadSchemes(category=''){
+  try{
+    const url=category?`${API}/schemes?category=${encodeURIComponent(category)}`:`${API}/schemes`;
+    const res=await fetch(url);
+    const schemes=await res.json();
+    const sm={active:{cls:'ta',label:'Active'},review:{cls:'tr',label:'Under Review'},flagged:{cls:'tf',label:'Flagged'}};
+    const grid=document.getElementById('scheme-grid');
+    if(!grid||!schemes.length)return;
+    grid.innerHTML=schemes.map(s=>{
+      const st=sm[s.status]||sm.active;
+      const disbL=(s.disbursed_cr>=100000)?(s.disbursed_cr/100000).toFixed(1)+'L Cr':(s.disbursed_cr>=1000)?(s.disbursed_cr/1000).toFixed(0)+'K Cr':s.disbursed_cr+'Cr';
+      return `<div class="scheme-card"><div class="sc-min">${s.ministry}</div><div class="sc-title">${s.name}</div><div class="sc-desc">${s.description}</div><div class="sc-nums"><div class="sc-num"><div class="sc-num-v">${s.beneficiaries||'—'}</div><div class="sc-num-l">Beneficiaries</div></div><div class="sc-num"><div class="sc-num-v">₹${disbL}</div><div class="sc-num-l">Disbursed</div></div></div><span class="tag-s ${st.cls}"><span class="sd"></span>${st.label} — ${s.impl_pct}%</span></div>`;
+    }).join('');
+    document.querySelectorAll('.scheme-card').forEach(el=>obs.observe(el));
+  }catch(e){console.warn('Schemes API unavailable, showing static data.');}
+}
+
+/* ════════ REQUEST ACCESS BUTTON ════════ */
+document.querySelector('.nav-cta').addEventListener('click',async()=>{
+  const email=prompt('Enter your email to request access:');if(!email)return;
+  const name=prompt('Your full name:');if(!name)return;
+  const password=prompt('Choose a password (min 6 chars):');if(!password)return;
+  try{
+    const res=await fetch(`${API}/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password})});
+    const data=await res.json();
+    if(res.ok){localStorage.setItem('gw_token',data.token);alert('✅ Access granted! Welcome to GovWatch.');}
+    else alert('❌ '+data.error);
+  }catch{alert('Could not connect to server. Make sure backend is running.');}
+});
+
+/* ════════ BOOT ════════ */
+loadStats();
+loadAlerts();
+loadSchemes();
+setInterval(()=>{loadStats();loadAlerts();},5*60*1000);
+</script>
+</body>
+</html>
