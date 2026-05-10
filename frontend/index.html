@@ -33,26 +33,30 @@ nav.nav-scrolled{background:rgba(6,8,16,.97);border-bottom:1px solid var(--borde
 #hero{position:relative;height:100vh;min-height:700px;display:flex;align-items:center;overflow:hidden}
 #hero-canvas{position:absolute;inset:0;z-index:0}
 .hero-grad{position:absolute;inset:0;z-index:1;
-  background:radial-gradient(ellipse 55% 80% at 68% 50%,rgba(6,8,16,0) 0%,rgba(6,8,16,.75) 55%,rgba(6,8,16,1) 100%),
+  background:radial-gradient(ellipse 55% 80% at 50% 50%,rgba(6,8,16,0) 0%,rgba(6,8,16,.75) 55%,rgba(6,8,16,1) 100%),
              linear-gradient(to right,rgba(6,8,16,.98) 0%,rgba(6,8,16,.65) 42%,rgba(6,8,16,.1) 100%)}
-.hero-content{position:relative;z-index:2;padding:0 64px;max-width:660px}
+.hero-content{position:relative;z-index:2;padding:0 64px;max-width:660px;text-align:left}
+.hero-content .hbtns{display:none} /* Hidden here, moved to stats section */
+.hero-content .hsub{margin-left:0}
+.hero-content .badge{flex-direction:row}
 .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,200,66,.07);border:1px solid rgba(245,200,66,.22);padding:6px 16px;border-radius:100px;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:26px;opacity:0;animation:fu .8s .4s forwards}
 .bdot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pd 2s infinite}
-h1.htitle{font-size:clamp(44px,5vw,78px);font-weight:800;line-height:1.0;letter-spacing:-2.5px;color:#fff;margin-bottom:20px;opacity:0;animation:fu .9s .6s forwards}
-h1.htitle em{color:var(--gold);font-style:normal;display:block}
-.hsub{font-size:13px;color:var(--text2);line-height:1.75;max-width:460px;font-family:'Space Mono',monospace;margin-bottom:38px;opacity:0;animation:fu .8s .8s forwards}
+h1.htitle{font-size:clamp(44px,5vw,78px);font-weight:800;line-height:1.15;letter-spacing:-0.03em;color:#fff;margin-bottom:24px;opacity:0;animation:fu .9s .6s forwards}
+h1.htitle em{color:var(--gold);font-style:normal;display:block;margin:4px 0}
+.hsub{font-size:14px;color:var(--text2);line-height:1.75;max-width:520px;font-family:'Space Mono',monospace;margin-bottom:44px;opacity:0;animation:fu .8s .8s forwards}
 .hbtns{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:fu .8s 1s forwards}
 .btn-g{background:var(--gold);color:#000;border:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .25s}
 .btn-g:hover{background:#fff;transform:translateY(-2px);box-shadow:0 16px 40px rgba(245,200,66,.3)}
 .btn-o{background:rgba(255,255,255,.05);color:#fff;border:1px solid rgba(255,255,255,.14);padding:14px 32px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Syne',sans-serif;transition:all .25s}
 .btn-o:hover{background:rgba(255,255,255,.1);transform:translateY(-2px)}
-.hstats{position:absolute;bottom:48px;left:64px;z-index:2;display:flex;gap:0;opacity:0;animation:fu .8s 1.2s forwards}
-.hstat{text-align:left;padding-right:36px;border-right:1px solid var(--border)}
-.hstat:nth-child(2){padding:0 36px}
-.hstat:last-child{border-right:none;padding-left:36px;padding-right:0}
-.hstat-n{font-size:30px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1}
+.hstats{position:absolute;bottom:80px;right:64px;z-index:2;display:flex;flex-direction:column;gap:16px;opacity:0;animation:fu .8s 1.2s forwards}
+.hstat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(14px);padding:20px 24px;border-radius:14px;min-width:260px;transition:all .3s}
+.hstat:hover{background:rgba(255,255,255,.06);border-color:rgba(245,200,66,.2);transform:translateX(-8px)}
+.hstat-n{font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.5px;line-height:1}
 .hstat-n span{color:var(--gold)}
-.hstat-l{font-size:10px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-top:4px;font-family:'Space Mono',monospace}
+.hstat-l{font-size:10px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-top:6px;font-family:'Space Mono',monospace}
+.hbtns-right{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.hbtns-right .btn-g, .hbtns-right .btn-o{width:100%;text-align:center}
 @keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.7)}}
 
@@ -197,7 +201,7 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
   .how-strip{grid-template-columns:1fr 1fr}
   .sgrid{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}
   .dgrid{grid-template-columns:1fr}.fg{grid-template-columns:1fr 1fr}
-  .hero-content{padding:0 22px}.hstats{left:22px}
+  .hero-content{padding:0 22px;margin-bottom:120px}.hstats{position:relative;bottom:auto;left:22px;margin-top:40px;flex-direction:column;gap:24px}
   #pipe-canvas{height:340px}
 }
 </style>
@@ -233,6 +237,10 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
     <div class="hstat"><div class="hstat-n"><span id="hc1">0</span>+</div><div class="hstat-l">Active Schemes</div></div>
     <div class="hstat"><div class="hstat-n">₹<span id="hc2">0</span><span>L Cr</span></div><div class="hstat-l">Funds Tracked</div></div>
     <div class="hstat"><div class="hstat-n"><span id="hc3">0</span>%</div><div class="hstat-l">Implementation Rate</div></div>
+    <div class="hbtns-right">
+      <button class="btn-g">Explore Dashboard</button>
+      <button class="btn-o">Watch Demo ▶</button>
+    </div>
   </div>
 </section>
 
@@ -392,12 +400,12 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
   geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
   geo.setAttribute('color',new THREE.BufferAttribute(col,3));
   const pts=new THREE.Points(geo,new THREE.PointsMaterial({size:.028,vertexColors:true,transparent:true,opacity:.65,sizeAttenuation:true}));
-  pts.position.x=3;sc.add(pts);
+  pts.position.x=0;sc.add(pts);
   const globe=new THREE.Mesh(new THREE.SphereGeometry(1.6,24,24),new THREE.MeshBasicMaterial({color:0x1a2550,wireframe:true,transparent:true,opacity:.18}));
-  globe.position.x=3;sc.add(globe);
+  globe.position.x=0;sc.add(globe);
   [{r:1.65,x:.4},{r:2.05,x:.7}].forEach((cfg,i)=>{
     const m=new THREE.Mesh(new THREE.TorusGeometry(cfg.r,.003,2,120),new THREE.MeshBasicMaterial({color:i===0?0xf5c842:0x00e5ff,transparent:true,opacity:i===0?.35:.15}));
-    m.position.x=3;m.rotation.x=cfg.x;m.userData.s=.002+i*.001;sc.add(m);
+    m.position.x=0;m.rotation.x=cfg.x;m.userData.s=.002+i*.001;sc.add(m);
   });
   let mx=0,my=0;
   addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5);my=(e.clientY/innerHeight-.5);});
