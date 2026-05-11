@@ -211,6 +211,49 @@ section{padding:120px 64px}
 .gv-line.warn { color: var(--gold); text-shadow: 0 0 5px var(--gold); }
 .gv-line.err { color: var(--red); text-shadow: 0 0 5px var(--red); }
 .gv-line.info { color: var(--cyan); text-shadow: 0 0 5px var(--cyan); }
+.sm-tabs { display: flex; gap: 20px; border-bottom: 1px solid rgba(0,229,255,0.1); margin-bottom: 16px; }
+.sm-tab { position: relative; padding: 8px 0; cursor: pointer; transition: all 0.3s ease; opacity: 0.5; border-bottom: 2px solid transparent; color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.sm-tab:hover{ opacity: 1; color: var(--cyan); }
+.sm-tab.on{ opacity: 1; color: var(--cyan); border-bottom: 2px solid var(--cyan); }
+
+/* Citizen Journey Section */
+#citizen-journey { position: relative; padding: 120px 64px; background: var(--ink); overflow: hidden; border-bottom: 1px solid var(--border); }
+.cj-pipeline { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 40px; margin: 80px 0; overflow-x: auto; padding: 40px 20px; }
+.cj-node { position: relative; min-width: 140px; text-align: center; z-index: 5; }
+.cj-card { position: relative; width: 80px; height: 80px; margin: 0 auto 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; backdrop-filter: blur(10px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+.cj-card::before { content: ""; position: absolute; inset: -1px; border-radius: 20px; padding: 1px; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+.cj-card:hover { transform: translateY(-10px) scale(1.1); background: rgba(0,229,255,0.08); border-color: var(--cyan); box-shadow: 0 10px 40px rgba(0,229,255,0.2); }
+.cj-node:hover .cj-pop { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.cj-label { font-size: 11px; font-weight: 700; color: var(--text); letter-spacing: 1px; text-transform: uppercase; font-family: 'Space Mono', monospace; }
+.cj-sub { font-size: 10px; color: var(--text2); margin-top: 4px; line-height: 1.4; opacity: 0; transition: 0.3s; }
+.cj-node:hover .cj-sub { opacity: 1; }
+
+.cj-pop { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(10px); width: 220px; background: rgba(11,16,32,0.95); border: 1px solid var(--border); border-radius: 12px; padding: 16px; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 100; backdrop-filter: blur(20px); text-align: left; }
+.cj-pop-title { font-size: 10px; color: var(--cyan); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+.cj-pop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.cj-pop-stat { font-size: 10px; color: var(--text2); }
+.cj-pop-stat span { display: block; font-size: 14px; font-weight: 800; color: #fff; margin-top: 2px; }
+.cj-pop-ai { background: rgba(0,229,255,0.05); padding: 8px; border-radius: 6px; font-size: 9px; line-height: 1.4; border-left: 2px solid var(--cyan); }
+
+.cj-svg-wrap { position: absolute; top: 80px; left: 0; width: 100%; height: 80px; pointer-events: none; z-index: 1; }
+.cj-line { stroke: rgba(0,229,255,0.1); stroke-width: 2; fill: none; }
+.cj-line-active { stroke: var(--cyan); stroke-width: 2; fill: none; stroke-dasharray: 8 8; animation: cjDash 20s linear infinite; opacity: 0.4; }
+@keyframes cjDash { from { stroke-dashoffset: 500; } to { stroke-dashoffset: 0; } }
+
+.cj-stream { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 20px; font-family: 'Space Mono', monospace; height: 160px; overflow: hidden; position: relative; }
+.cj-stream-inner { position: absolute; bottom: 0; left: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px; }
+.cj-msg { font-size: 12px; color: var(--text2); opacity: 0; transform: translateY(20px); animation: cjMsgIn 0.5s forwards; }
+@keyframes cjMsgIn { to { opacity: 1; transform: translateY(0); } }
+.cj-msg .time { color: var(--cyan); margin-right: 10px; }
+.cj-msg .action { color: #fff; }
+
+.cj-decision { display: flex; gap: 30px; margin-top: 40px; justify-content: center; opacity: 0.5; transition: 0.5s; }
+.cj-decision.active { opacity: 1; }
+.cj-branch { flex: 1; max-width: 300px; padding: 20px; border-radius: 16px; border: 1px dashed; position: relative; }
+.cj-branch.yes { border-color: var(--green); background: rgba(0,255,157,0.02); }
+.cj-branch.no { border-color: var(--red); background: rgba(255,71,87,0.02); }
+.cj-branch h4 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.cj-branch p { font-size: 11px; color: var(--text2); }
 
 /* Right AI */
 .gv-ai-panel { padding: 16px; overflow-y: auto; }
@@ -360,7 +403,180 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
   </div>
 </section>
 
-<!-- SCHEMES -->
+<!-- CITIZEN JOURNEY FLOW -->
+<section id="citizen-journey">
+  <div class="tag rv">Citizen Journey Intelligence</div>
+  <h2 class="rv">Track Life-Cycle <em>Transparency</em></h2>
+  <p class="rv" style="max-width: 600px; margin-bottom: 60px">Real-time monitoring of how citizens discover, verify eligibility, and apply for government schemes across the national digital infrastructure.</p>
+
+  <div class="cj-pipeline">
+    <!-- SVG Lines will be injected by JS or drawn here -->
+    <div class="cj-svg-wrap">
+      <svg width="100%" height="100%" viewBox="0 0 1400 80">
+        <path class="cj-line" d="M70,40 L1330,40" />
+        <path class="cj-line-active" d="M70,40 L1330,40" />
+      </svg>
+    </div>
+
+    <!-- Node 1 -->
+    <div class="cj-node rv d1">
+      <div class="cj-pop">
+        <div class="cj-pop-title">PORTAL ENTRY <span>LIVE</span></div>
+        <div class="cj-pop-grid">
+          <div class="cj-pop-stat">SUCCESS RATE<span>98.4%</span></div>
+          <div class="cj-pop-stat">ACTIVE USERS<span>12.4K</span></div>
+        </div>
+        <div class="cj-pop-ai">AI INSIGHT: Traffic surge detected from rural gateway nodes in Uttar Pradesh.</div>
+      </div>
+      <div class="cj-card">👤</div>
+      <div class="cj-label">Portal Entry</div>
+      <div class="cj-sub">User enters platform</div>
+    </div>
+
+    <!-- Node 2 -->
+    <div class="cj-node rv d2">
+      <div class="cj-pop">
+        <div class="cj-pop-title">SELECTION <span>LIVE</span></div>
+        <div class="cj-pop-grid">
+          <div class="cj-pop-stat">AVG TIME<span>14s</span></div>
+          <div class="cj-pop-stat">TOP CAT<span>Farmers</span></div>
+        </div>
+        <div class="cj-pop-ai">AI INSIGHT: 42% of users prioritize Agricultural schemes this hour.</div>
+      </div>
+      <div class="cj-card">📂</div>
+      <div class="cj-label">Category</div>
+      <div class="cj-sub">Selects niche</div>
+    </div>
+
+    <!-- Node 3 -->
+    <div class="cj-node rv d3">
+      <div class="cj-pop">
+        <div class="cj-pop-title">DISCOVERY <span>LIVE</span></div>
+        <div class="cj-pop-grid">
+          <div class="cj-pop-stat">CLICK RATE<span>62%</span></div>
+          <div class="cj-pop-stat">MATCHES<span>142</span></div>
+        </div>
+        <div class="cj-pop-ai">AI INSIGHT: High engagement on new "Smart City" initiatives.</div>
+      </div>
+      <div class="cj-card">🌍</div>
+      <div class="cj-label">Discovery</div>
+      <div class="cj-sub">List of schemes</div>
+    </div>
+
+    <!-- Node 4 -->
+    <div class="cj-node rv d1">
+      <div class="cj-pop">
+        <div class="cj-pop-title">SMART SEARCH <span>LIVE</span></div>
+        <div class="cj-pop-grid">
+          <div class="cj-pop-stat">ACCURACY<span>94%</span></div>
+          <div class="cj-pop-stat">QUERIES<span>840/m</span></div>
+        </div>
+        <div class="cj-pop-ai">AI INSIGHT: Natural language processing matching "Pension" to 12 schemes.</div>
+      </div>
+      <div class="cj-card">🔍</div>
+      <div class="cj-label">Smart Search</div>
+      <div class="cj-sub">Keyword match</div>
+    </div>
+
+    <!-- Node 5 -->
+    <div class="cj-node rv d2">
+      <div class="cj-pop">
+        <div class="cj-pop-title">ELIGIBILITY <span>LIVE</span></div>
+        <div class="cj-pop-grid">
+          <div class="cj-pop-stat">PASS RATE<span>71%</span></div>
+          <div class="cj-pop-stat">SCANS<span>4.2K</span></div>
+        </div>
+        <div class="cj-pop-ai">AI INSIGHT: Automated Aadhar-linked cross-verification active.</div>
+      </div>
+      <div class="cj-card">🧬</div>
+      <div class="cj-label">Eligibility</div>
+      <div class="cj-sub">Instant scan</div>
+    </div>
+
+    <!-- Node 6 -->
+    <div class="cj-node rv d3">
+      <div class="cj-pop">
+        <div class="cj-pop-title">GATEWAY <span>SECURE</span></div>
+        <div class="cj-pop-grid">
+          <div class="cj-pop-stat">LATENCY<span>42ms</span></div>
+          <div class="cj-pop-stat">ENCRYPTION<span>AES-256</span></div>
+        </div>
+        <div class="cj-pop-ai">AI INSIGHT: Secure tunnel established for data transmission.</div>
+      </div>
+      <div class="cj-card">⛩️</div>
+      <div class="cj-label">Gateway</div>
+      <div class="cj-sub">Click to apply</div>
+    </div>
+
+    <!-- Node 7 -->
+    <div class="cj-node rv d1">
+      <div class="cj-pop">
+        <div class="cj-pop-title">VERIFICATION <span>LIVE</span></div>
+        <div class="cj-pop-grid">
+          <div class="cj-pop-stat">STATUS<span>Running</span></div>
+          <div class="cj-pop-stat">CHECKS<span>12</span></div>
+        </div>
+        <div class="cj-pop-ai">AI INSIGHT: Multimodal verification against 4 ministry databases.</div>
+      </div>
+      <div class="cj-card">🛡️</div>
+      <div class="cj-label">Verification</div>
+      <div class="cj-sub">Data integrity</div>
+    </div>
+
+    <!-- Node 8 -->
+    <div class="cj-node rv d2">
+      <div class="cj-pop">
+        <div class="cj-pop-title">SUBMISSION <span>FINAL</span></div>
+        <div class="cj-pop-grid">
+          <div class="cj-pop-stat">SUCCESS<span>100%</span></div>
+          <div class="cj-pop-stat">APP IDs<span>824</span></div>
+        </div>
+        <div class="cj-pop-ai">AI INSIGHT: Submission complete. Routed to District Magistrate portal.</div>
+      </div>
+      <div class="cj-card">📡</div>
+      <div class="cj-label">Submission</div>
+      <div class="cj-sub">Final application</div>
+    </div>
+
+    <!-- Node 9 -->
+    <div class="cj-node rv d3">
+      <div class="cj-pop">
+        <div class="cj-pop-title">FEEDBACK <span>OPEN</span></div>
+        <div class="cj-pop-grid">
+          <div class="cj-pop-stat">SENTIMENT<span>Pos</span></div>
+          <div class="cj-pop-stat">SCORE<span>4.8/5</span></div>
+        </div>
+        <div class="cj-pop-ai">AI INSIGHT: User satisfaction remains high due to 2m completion time.</div>
+      </div>
+      <div class="cj-card">💬</div>
+      <div class="cj-label">Feedback</div>
+      <div class="cj-sub">Process review</div>
+    </div>
+  </div>
+
+  <div class="cj-decision rv">
+    <div class="cj-branch yes">
+      <div style="color:var(--green); font-size:10px; font-weight:800; margin-bottom:10px">ELIGIBILITY DECISION ENGINE</div>
+      <h4>ELIGIBLE → CONTINUE</h4>
+      <p>Secure routing to ministry application server. AI pre-fills 80% of data based on verified credentials.</p>
+      <div style="position:absolute; right:15px; top:15px; font-size:20px">✨</div>
+    </div>
+    <div class="cj-branch no">
+      <div style="color:var(--red); font-size:10px; font-weight:800; margin-bottom:10px">ANOMALY DETECTED</div>
+      <h4>NOT ELIGIBLE → REROUTE</h4>
+      <p>AI recommends 3 alternative schemes based on demographic mismatch. No dead ends in the journey.</p>
+      <div style="position:absolute; right:15px; top:15px; font-size:20px">🤖</div>
+    </div>
+  </div>
+
+  <div class="gv-panel-title rv" style="margin-top: 60px; margin-bottom: 20px">LIVE USER ACTIVITY STREAM</div>
+  <div class="cj-stream rv">
+    <div class="cj-stream-inner" id="cj-stream-log">
+      <!-- Logs will be injected by JS -->
+    </div>
+  </div>
+</section>
+
 <section id="schemes">
   <div class="tag rv">Live Schemes</div>
   <h2 class="stitle rv d1">Monitor Every Programme</h2>
@@ -1239,8 +1455,43 @@ function logout() {
   window.location.reload();
 }
 
+/* ════════ CITIZEN JOURNEY LOGS ════════ */
+function initCJStream() {
+  const log = document.getElementById('cj-stream-log');
+  if (!log) return;
+  
+  const actions = [
+    { txt: 'User from Bihar searched "PM Kisan"', type: 'info' },
+    { txt: 'Eligibility confirmed for Ayushman Bharat', type: 'success' },
+    { txt: 'Application submitted — Rajasthan', type: 'success' },
+    { txt: 'AI suggested 3 matching schemes', type: 'info' },
+    { txt: 'Portal Entry: New Session from Bangalore', type: 'info' },
+    { txt: 'Document Verification: Income Certificate Verified', type: 'success' },
+    { txt: 'Anomaly Scan: No issues found for Odisha DB', type: 'info' },
+    { txt: 'Feedback Received: 5/5 from Kerala User', type: 'success' },
+    { txt: 'Smart Search: "Scholarship" matched 8 results', type: 'info' }
+  ];
+
+  function addLog() {
+    const a = actions[Math.floor(Math.random() * actions.length)];
+    const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+    const div = document.createElement('div');
+    div.className = 'cj-msg';
+    div.innerHTML = `<span class="time">[${time}]</span> <span class="action">${a.txt}</span>`;
+    log.appendChild(div);
+    
+    if (log.children.length > 8) {
+      log.removeChild(log.firstChild);
+    }
+  }
+
+  setInterval(addLog, 3000);
+  for(let i=0; i<5; i++) setTimeout(addLog, i*400);
+}
+
 /* ════════ BOOT ════════ */
 checkAuth();
+initCJStream();
 loadStats();
 loadAlerts();
 loadSchemes();
