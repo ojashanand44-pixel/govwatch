@@ -252,21 +252,6 @@ section{padding:120px 64px}
 .cp-upload-box { border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: 0.3s; }
 .cp-upload-box:hover { border-color: var(--cyan); background: rgba(0,229,255,0.02); }
 
-/* Connected Layer Styles */
-.cl-marker { position: relative; width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 0 20px currentColor; animation: clPulse 2s infinite; }
-@keyframes clPulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(2); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
-
-.cl-card { background: rgba(11,16,32,0.85); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; backdrop-filter: blur(10px); min-width: 140px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); pointer-events: none; }
-.cl-card-name { font-size: 11px; font-weight: 800; color: #fff; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
-.cl-card-city { font-size: 9px; color: var(--text2); margin-bottom: 8px; }
-.cl-card-status { font-size: 9px; color: var(--cyan); font-weight: 700; display: flex; align-items: center; gap: 5px; }
-.cl-card-status::before { content: ""; width: 5px; height: 5px; background: var(--cyan); border-radius: 50%; animation: pd 1s infinite; }
-
-.cl-line { stroke-dasharray: 5, 10; animation: clFlow 30s linear infinite; stroke-linecap: round; }
-@keyframes clFlow { from { stroke-dashoffset: 1000; } to { stroke-dashoffset: 0; } }
-
-.cl-dist-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; background: var(--ink); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); }
-
 /* Right AI */
 .gv-ai-panel { padding: 16px; overflow-y: auto; }
 .gv-risk-card { background: rgba(255,71,87,0.05); border: 1px solid rgba(255,71,87,0.3); padding: 16px; border-radius: 6px; margin-bottom: 24px; box-shadow: inset 0 0 20px rgba(255,71,87,0.05); }
@@ -1017,71 +1002,6 @@ function initMap(){
   if(!mapEl||mapEl._leaflet_id)return;
   const map=L.map('india-map',{center:[22.5,82.5],zoom:5,zoomControl:true,scrollWheelZoom:true,minZoom:4,maxZoom:14});
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
-
-    // ════════ CONNECTED LOCATIONS: BENGALURU ↔ KATHMANDU ════════
-    const locs = [
-      { id: 'ojash', name: 'Ojash', city: 'Bengaluru, IN', lat: 12.9716, lng: 77.5946, color: 'var(--cyan)' },
-      { id: 'dipika', name: 'Dipika', city: 'Kathmandu, NP', lat: 27.7172, lng: 85.3240, color: 'var(--gold)' }
-    ];
-
-    locs.forEach(l => {
-      const icon = L.divIcon({
-        className: 'cl-marker-wrap',
-        html: `<div class="cl-marker" style="color: ${l.color}; background: ${l.color}"></div>`
-      });
-      
-      const time = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-      const popupContent = `
-        <div class="cl-card">
-          <div class="cl-card-name">${l.name}</div>
-          <div class="cl-card-city">${l.city}</div>
-          <div style="font-size: 10px; color: #fff; margin-bottom: 4px">${time}</div>
-          <div class="cl-card-status">Connected Live</div>
-        </div>
-      `;
-
-      L.marker([l.lat, l.lng], {icon}).addTo(map).bindTooltip(popupContent, {
-        permanent: false, 
-        direction: 'top', 
-        className: 'cl-tooltip-raw',
-        opacity: 1
-      });
-    });
-
-    // Animated Curved Line
-    const latlngs = locs.map(l => [l.lat, l.lng]);
-    const offsetX = latlngs[1][1] - latlngs[0][1];
-    const offsetY = latlngs[1][0] - latlngs[0][0];
-    const r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2));
-    const theta = Math.atan2(offsetY, offsetX);
-    const thetaOffset = 0.5; // Curvature intensity
-
-    const midX = latlngs[0][1] + offsetX / 2 - (r/4) * Math.sin(theta);
-    const midY = latlngs[0][0] + offsetY / 2 + (r/4) * Math.cos(theta);
-
-    // Use Quadratic Bezier approximation with Polyline for simplicity
-    const curvePoints = [];
-    for(let t=0; t<=1; t+=0.05) {
-      const x = (1-t)*(1-t)*latlngs[0][1] + 2*(1-t)*t*midX + t*t*latlngs[1][1];
-      const y = (1-t)*(1-t)*latlngs[0][0] + 2*(1-t)*t*midY + t*t*latlngs[1][0];
-      curvePoints.push([y, x]);
-    }
-
-    const connectionLine = L.polyline(curvePoints, {
-      color: 'var(--cyan)',
-      weight: 2,
-      opacity: 0.3,
-      className: 'cl-line'
-    }).addTo(map);
-
-    // Distance Label
-    L.marker([midY, midX], {
-      icon: L.divIcon({
-        className: 'cl-dist-wrap',
-        html: `<div class="cl-dist-label">~1,800 KM CONNECTED</div>`
-      })
-    }).addTo(map);
-    // ════════════════════════════════════════════════════════════
 
   const states=[
     {n:'Uttar Pradesh',lat:26.85,lng:80.91,p:71,s:['PM Kisan','JJM','PMAY'],b:'₹2.1L Cr',flag:true},
