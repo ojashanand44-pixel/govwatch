@@ -839,12 +839,17 @@ function fp(b,cat){document.querySelectorAll('.pill').forEach(p=>p.classList.rem
 /* ════════ API BASE URL ════════ */
 // When you open http://localhost:3000 this points to your own server.
 // Change this if you deploy online (e.g. 'https://yourapp.com/api')
-const API = (window.location.protocol === 'file:') ? 'http://localhost:3000/api' : window.location.origin + '/api';
+const API = (window.location.protocol === 'file:') ? 'http://localhost:3000/api' : 
+            (window.location.hostname.includes('github.io')) ? 'https://ojashanand44-pixel.github.io/api' : 
+            window.location.origin + '/api';
+
+let isDemoMode = false;
 
 /* ════════ LOAD STATS FROM API ════════ */
 async function loadStats(){
   try{
     const res=await fetch(`${API}/stats`);
+    if (!res.ok || res.headers.get('content-type').includes('text/html')) throw new Error('SimMode');
     const data=await res.json();
     cnt('hc1',data.activeSchemes);
     cnt('hc2',+(data.totalBudgetCr/100000).toFixed(1),1);
@@ -853,35 +858,39 @@ async function loadStats(){
       cnt('dc1',data.activeSchemes);
       cnt('dc2',+(data.totalBudgetCr/100000).toFixed(1),1);
       
-      // God Level Live Fluctuation
       if (!window.liveGraphInterval) {
         let baseFunds = +(data.totalBudgetCr/100000);
         window.liveGraphInterval = setInterval(() => {
           document.querySelectorAll('.mbar').forEach(b => {
             const current = parseFloat(b.style.height);
             b.style.height = `${Math.max(5, Math.min(100, current + (Math.random() - 0.5) * 12))}%`;
-            b.style.transition = 'height 1s ease-in-out';
           });
           const dc2 = document.getElementById('dc2');
           if (dc2) dc2.textContent = (baseFunds + (Math.random() * 0.04 - 0.01)).toFixed(2);
         }, 1500);
       }
-      
       dashObs.disconnect();
     }},{threshold:.2});
     const dash=document.getElementById('dashboard');if(dash)dashObs.observe(dash);
-    const ot=document.getElementById('stat-ontrack');
-    const rv=document.getElementById('stat-review');
-    const fl=document.getElementById('stat-flagged');
-    if(ot)ot.textContent=data.states.onTrack;
-    if(rv)rv.textContent=data.states.underReview;
-    if(fl)fl.textContent=data.states.flagged;
-    const ab=document.getElementById('alert-badge');
-    if(ab)ab.textContent=`${data.activeAlerts} Active`;
   }catch(e){
-    // API not running — fall back to static counters
+    isDemoMode = true;
+    console.log('🚀 Entering Simulation Mode...');
     setTimeout(()=>{cnt('hc1',748);cnt('hc2',24.7,1);cnt('hc3',82);},1300);
-    const dashObs=new IntersectionObserver(es=>{if(es[0].isIntersecting){cnt('dc1',748);cnt('dc2',24.7,1);dashObs.disconnect();}},{threshold:.2});
+    const dashObs=new IntersectionObserver(es=>{if(es[0].isIntersecting){
+      cnt('dc1',748);cnt('dc2',24.7,1);
+      if (!window.liveGraphInterval) {
+        let bf = 24.7;
+        window.liveGraphInterval = setInterval(() => {
+          document.querySelectorAll('.mbar').forEach(b => {
+            const cur = parseFloat(b.style.height) || 50;
+            b.style.height = `${Math.max(5, Math.min(100, cur + (Math.random() - 0.5) * 12))}%`;
+          });
+          const dc2 = document.getElementById('dc2');
+          if (dc2) dc2.textContent = (bf + (Math.random() * 0.04 - 0.01)).toFixed(2);
+        }, 1500);
+      }
+      dashObs.disconnect();
+    }},{threshold:.2});
     const dash=document.getElementById('dashboard');if(dash)dashObs.observe(dash);
   }
 }
@@ -1078,9 +1087,17 @@ document.querySelector('.nav-cta').addEventListener('click',async()=>{
   const email=prompt('Enter your email to request access:');if(!email)return;
   const name=prompt('Your full name:');if(!name)return;
   const password=prompt('Choose a password (min 6 chars):');if(!password)return;
+  if (isDemoMode) {
+    localStorage.setItem('gw_token', 'demo_token');
+    localStorage.setItem('gw_name', name);
+    alert('🚀 Simulation Access Granted! Welcome, ' + name + '.');
+    checkAuth();
+    return;
+  }
   console.log('Attempting register at:', `${API}/auth/register`);
   try{
     const res=await fetch(`${API}/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password})});
+    if (!res.ok || res.headers.get('content-type').includes('text/html')) throw new Error('NoServer');
     const data=await res.json();
     if(res.ok){
       localStorage.setItem('gw_token',data.token);
