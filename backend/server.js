@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'govwatch-secret-change-in-production';
 
 // ── Middleware ─────────────────────────────────────────────────
-app.use(cors());
+app.use(cors({ origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE'], allowedHeaders: ['Content-Type', 'Authorization'] }));
 app.use(express.json());
 // Serves govwatch/backend/public/index.html at http://localhost:3000
 app.use(express.static(path.join(__dirname, 'public')));
@@ -188,6 +188,7 @@ function adminOnly(req, res, next) {
 //  AUTH ROUTES
 // ════════════════════════════════════════════════════════════════
 app.post('/api/auth/register', (req, res) => {
+  console.log('📝 Register request received:', req.body.email);
   const { name, email, password } = req.body;
   if (!name || !email || !password)
     return res.status(400).json({ error: 'name, email and password are required' });

@@ -304,6 +304,10 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
     <li><a href="#features">Features</a></li>
   </ul>
   <button class="nav-cta">Request Access →</button>
+  <div id="user-nav" style="display:none; align-items:center; gap:15px">
+    <span id="user-name" style="color:#fff; font-weight:600; font-size:13px; font-family:'Syne',sans-serif"></span>
+    <button class="btn-logout" onclick="logout()" style="padding: 6px 12px; font-size: 11px; background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.3); color: #ff4757; border-radius: 6px; cursor: pointer; font-family:'Space Mono',monospace">LOGOUT</button>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -835,7 +839,7 @@ function fp(b,cat){document.querySelectorAll('.pill').forEach(p=>p.classList.rem
 /* ════════ API BASE URL ════════ */
 // When you open http://localhost:3000 this points to your own server.
 // Change this if you deploy online (e.g. 'https://yourapp.com/api')
-const API='http://localhost:3000/api';
+const API = (window.location.protocol === 'file:') ? 'http://localhost:3000/api' : window.location.origin + '/api';
 
 /* ════════ LOAD STATS FROM API ════════ */
 async function loadStats(){
@@ -977,7 +981,7 @@ document.addEventListener('click', (e) => {
   const btn = e.target.closest('button, a, .fc-link');
   if (!btn) return;
   
-  if (btn.id === 'pipe-tour-btn' || btn.classList.contains('pill') || btn.closest('.how-step') || btn.closest('.gov-modal') || btn.closest('.scheme-card') || btn.closest('.god-view')) return;
+  if (btn.id === 'pipe-tour-btn' || btn.classList.contains('nav-cta') || btn.classList.contains('pill') || btn.closest('.how-step') || btn.closest('.gov-modal') || btn.closest('.scheme-card') || btn.closest('.god-view')) return;
   if (btn.classList.contains('nav-cta')) { /* allow original prompt to run, but let's override it for the modal effect */ }
 
   const text = btn.textContent.trim();
@@ -1074,15 +1078,49 @@ document.querySelector('.nav-cta').addEventListener('click',async()=>{
   const email=prompt('Enter your email to request access:');if(!email)return;
   const name=prompt('Your full name:');if(!name)return;
   const password=prompt('Choose a password (min 6 chars):');if(!password)return;
+  console.log('Attempting register at:', `${API}/auth/register`);
   try{
     const res=await fetch(`${API}/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password})});
     const data=await res.json();
-    if(res.ok){localStorage.setItem('gw_token',data.token);alert('✅ Access granted! Welcome to GovWatch.');}
-    else alert('❌ '+data.error);
-  }catch{alert('Could not connect to server. Make sure backend is running.');}
+    if(res.ok){
+      localStorage.setItem('gw_token',data.token);
+      localStorage.setItem('gw_name', name);
+      alert('✅ Access granted! Welcome to GovWatch, ' + name + '.');
+      checkAuth();
+    }
+    else alert('❌ '+ (data.error || 'Registration failed'));
+  }catch(err){
+    console.error('Registration error:', err);
+    alert('Could not connect to server at ' + API + '.\nError: ' + err.message + '\n\nMake sure backend is running and you are accessing the site via http://localhost:3000');
+  }
 });
 
+/* ════════ AUTH STATE ════════ */
+function checkAuth() {
+  const token = localStorage.getItem('gw_token');
+  const name = localStorage.getItem('gw_name');
+  const navCta = document.querySelector('.nav-cta');
+  const userNav = document.getElementById('user-nav');
+  const userName = document.getElementById('user-name');
+
+  if (token && userNav) {
+    if (navCta) navCta.style.display = 'none';
+    userNav.style.display = 'flex';
+    userName.textContent = '👤 ' + (name || 'Officer');
+  } else if (userNav) {
+    if (navCta) navCta.style.display = 'block';
+    userNav.style.display = 'none';
+  }
+}
+
+function logout() {
+  localStorage.removeItem('gw_token');
+  localStorage.removeItem('gw_name');
+  window.location.reload();
+}
+
 /* ════════ BOOT ════════ */
+checkAuth();
 loadStats();
 loadAlerts();
 loadSchemes();
