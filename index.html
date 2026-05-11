@@ -216,47 +216,46 @@ section{padding:120px 64px}
 .sm-tab:hover{ opacity: 1; color: var(--cyan); }
 .sm-tab.on{ opacity: 1; color: var(--cyan); border-bottom: 2px solid var(--cyan); }
 
-/* Citizen Journey Section */
-#citizen-journey { position: relative; padding: 120px 64px; background: var(--ink); overflow: hidden; border-bottom: 1px solid var(--border); }
-.cj-pipeline { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 40px; margin: 80px 0; overflow-x: auto; padding: 40px 20px; }
-.cj-node { position: relative; min-width: 140px; text-align: center; z-index: 5; }
-.cj-card { position: relative; width: 80px; height: 80px; margin: 0 auto 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; backdrop-filter: blur(10px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
-.cj-card::before { content: ""; position: absolute; inset: -1px; border-radius: 20px; padding: 1px; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
-.cj-card:hover { transform: translateY(-10px) scale(1.1); background: rgba(0,229,255,0.08); border-color: var(--cyan); box-shadow: 0 10px 40px rgba(0,229,255,0.2); }
-.cj-node:hover .cj-pop { opacity: 1; transform: translateY(0); pointer-events: auto; }
-.cj-label { font-size: 11px; font-weight: 700; color: var(--text); letter-spacing: 1px; text-transform: uppercase; font-family: 'Space Mono', monospace; }
-.cj-sub { font-size: 10px; color: var(--text2); margin-top: 4px; line-height: 1.4; opacity: 0; transition: 0.3s; }
-.cj-node:hover .cj-sub { opacity: 1; }
+/* Citizen Portal Section */
+#citizen-portal { position: relative; padding: 100px 64px; background: var(--ink2); min-height: 800px; border-bottom: 1px solid var(--border); }
+.cp-container { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 24px; min-height: 700px; display: grid; grid-template-rows: 80px 1fr; overflow: hidden; backdrop-filter: blur(20px); }
+.cp-header { background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; }
+.cp-nav { display: flex; gap: 30px; }
+.cp-nav-item { font-size: 11px; font-weight: 800; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: 0.3s; padding: 10px 0; border-bottom: 2px solid transparent; }
+.cp-nav-item.active { color: var(--cyan); border-color: var(--cyan); }
 
-.cj-pop { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(10px); width: 220px; background: rgba(11,16,32,0.95); border: 1px solid var(--border); border-radius: 12px; padding: 16px; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 100; backdrop-filter: blur(20px); text-align: left; }
-.cj-pop-title { font-size: 10px; color: var(--cyan); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-.cj-pop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-.cj-pop-stat { font-size: 10px; color: var(--text2); }
-.cj-pop-stat span { display: block; font-size: 14px; font-weight: 800; color: #fff; margin-top: 2px; }
-.cj-pop-ai { background: rgba(0,229,255,0.05); padding: 8px; border-radius: 6px; font-size: 9px; line-height: 1.4; border-left: 2px solid var(--cyan); }
+.cp-view { padding: 40px; display: none; animation: fadeIn 0.4s ease; }
+.cp-view.active { display: block; }
 
-.cj-svg-wrap { position: absolute; top: 80px; left: 0; width: 100%; height: 80px; pointer-events: none; z-index: 1; }
-.cj-line { stroke: rgba(0,229,255,0.1); stroke-width: 2; fill: none; }
-.cj-line-active { stroke: var(--cyan); stroke-width: 2; fill: none; stroke-dasharray: 8 8; animation: cjDash 20s linear infinite; opacity: 0.4; }
-@keyframes cjDash { from { stroke-dashoffset: 500; } to { stroke-dashoffset: 0; } }
+/* Dashboard Styles */
+.cp-dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+.cp-card-p { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; margin-bottom: 20px; }
+.cp-status-row { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.cp-status-tag { padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+.st-pending { background: rgba(245,200,66,0.1); color: var(--gold); }
+.st-approved { background: rgba(0,255,157,0.1); color: var(--green); }
 
-.cj-stream { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 20px; font-family: 'Space Mono', monospace; height: 160px; overflow: hidden; position: relative; }
-.cj-stream-inner { position: absolute; bottom: 0; left: 20px; right: 20px; display: flex; flex-direction: column; gap: 8px; }
-.cj-msg { font-size: 12px; color: var(--text2); opacity: 0; transform: translateY(20px); animation: cjMsgIn 0.5s forwards; }
-@keyframes cjMsgIn { to { opacity: 1; transform: translateY(0); } }
-.cj-msg .time { color: var(--cyan); margin-right: 10px; }
-.cj-msg .action { color: #fff; }
+/* Discovery Styles */
+.cp-filter-panel { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 16px; }
+.cp-input-wrap { display: flex; flex-direction: column; gap: 8px; }
+.cp-input-wrap label { font-size: 10px; font-weight: 800; color: var(--text2); text-transform: uppercase; }
+.cp-select, .cp-input { background: #060810; border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px; outline: none; font-size: 13px; }
 
-.cj-decision { display: flex; gap: 30px; margin-top: 40px; justify-content: center; opacity: 0.5; transition: 0.5s; }
-.cj-decision.active { opacity: 1; }
-.cj-branch { flex: 1; max-width: 300px; padding: 20px; border-radius: 16px; border: 1px dashed; position: relative; }
-.cj-branch.yes { border-color: var(--green); background: rgba(0,255,157,0.02); }
-.cj-branch.no { border-color: var(--red); background: rgba(255,71,87,0.02); }
-.cj-branch h4 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
-.cj-branch p { font-size: 11px; color: var(--text2); }
+/* Application Workflow */
+.cp-wizard { max-width: 600px; margin: 0 auto; }
+.cp-wiz-steps { display: flex; justify-content: space-between; margin-bottom: 40px; position: relative; }
+.cp-wiz-steps::after { content: ""; position: absolute; top: 15px; left: 0; right: 0; height: 2px; background: rgba(255,255,255,0.05); z-index: 1; }
+.cp-wiz-step { width: 32px; height: 32px; background: var(--ink); border: 2px solid rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; position: relative; z-index: 2; color: var(--text2); transition: 0.3s; }
+.cp-wiz-step.active { border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 15px var(--cyan); }
+.cp-wiz-step.done { background: var(--cyan); border-color: var(--cyan); color: #000; }
+
+.cp-upload-box { border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: 0.3s; }
+.cp-upload-box:hover { border-color: var(--cyan); background: rgba(0,229,255,0.02); }
 
 /* Right AI */
 .gv-ai-panel { padding: 16px; overflow-y: auto; }
+.tactical-tooltip { background: rgba(0,0,0,0.8) !important; border: 1px solid var(--cyan) !important; color: var(--cyan) !important; font-family: 'Space Mono', monospace !important; font-size: 10px !important; font-weight: 800 !important; border-radius: 4px !important; box-shadow: 0 0 15px rgba(0,229,255,0.3) !important; padding: 4px 8px !important; }
+.tactical-tooltip::before { border-top-color: var(--cyan) !important; }
 .gv-risk-card { background: rgba(255,71,87,0.05); border: 1px solid rgba(255,71,87,0.3); padding: 16px; border-radius: 6px; margin-bottom: 24px; box-shadow: inset 0 0 20px rgba(255,71,87,0.05); }
 .gv-rc-state { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: 2px; margin-bottom: 4px; }
 .gv-rc-score { font-size: 12px; color: var(--text2); margin-bottom: 12px; }
@@ -403,176 +402,167 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
   </div>
 </section>
 
-<!-- CITIZEN JOURNEY FLOW -->
-<section id="citizen-journey">
-  <div class="tag rv">Citizen Journey Intelligence</div>
-  <h2 class="rv">Track Life-Cycle <em>Transparency</em></h2>
-  <p class="rv" style="max-width: 600px; margin-bottom: 60px">Real-time monitoring of how citizens discover, verify eligibility, and apply for government schemes across the national digital infrastructure.</p>
+<!-- CITIZEN SERVICE PORTAL -->
+<section id="citizen-portal">
+  <div class="tag rv">User Portal v4.2</div>
+  <h2 class="rv">Unified <em>Citizen</em> Service</h2>
+  <p class="rv" style="max-width: 600px; margin-bottom: 40px">A real-time gateway for scheme discovery, automated eligibility scanning, and secure application submission.</p>
 
-  <div class="cj-pipeline">
-    <!-- SVG Lines will be injected by JS or drawn here -->
-    <div class="cj-svg-wrap">
-      <svg width="100%" height="100%" viewBox="0 0 1400 80">
-        <path class="cj-line" d="M70,40 L1330,40" />
-        <path class="cj-line-active" d="M70,40 L1330,40" />
-      </svg>
-    </div>
-
-    <!-- Node 1 -->
-    <div class="cj-node rv d1">
-      <div class="cj-pop">
-        <div class="cj-pop-title">PORTAL ENTRY <span>LIVE</span></div>
-        <div class="cj-pop-grid">
-          <div class="cj-pop-stat">SUCCESS RATE<span>98.4%</span></div>
-          <div class="cj-pop-stat">ACTIVE USERS<span>12.4K</span></div>
-        </div>
-        <div class="cj-pop-ai">AI INSIGHT: Traffic surge detected from rural gateway nodes in Uttar Pradesh.</div>
+  <div class="cp-container rv d1">
+    <div class="cp-header">
+      <div class="cp-nav">
+        <div class="cp-nav-item active" onclick="switchCpView('dash')">Dashboard</div>
+        <div class="cp-nav-item" onclick="switchCpView('discover')">Find Schemes</div>
+        <div class="cp-nav-item" onclick="switchCpView('track')">Track Status</div>
       </div>
-      <div class="cj-card">👤</div>
-      <div class="cj-label">Portal Entry</div>
-      <div class="cj-sub">User enters platform</div>
+      <div style="font-size: 12px; color: var(--cyan); font-family: 'Space Mono', monospace">SESSION_ID: 98X-T21</div>
     </div>
 
-    <!-- Node 2 -->
-    <div class="cj-node rv d2">
-      <div class="cj-pop">
-        <div class="cj-pop-title">SELECTION <span>LIVE</span></div>
-        <div class="cj-pop-grid">
-          <div class="cj-pop-stat">AVG TIME<span>14s</span></div>
-          <div class="cj-pop-stat">TOP CAT<span>Farmers</span></div>
+    <!-- VIEW 1: DASHBOARD -->
+    <div id="view-dash" class="cp-view active">
+      <h3 style="font-size: 24px; margin-bottom: 5px">Good Evening, <span id="cp-user-name">Ojash</span></h3>
+      <p style="color: var(--text2); margin-bottom: 30px">You have 2 applications pending review.</p>
+
+      <div class="cp-dash-grid">
+        <div>
+          <div class="cp-card-p">
+            <div class="gv-panel-title" style="font-size: 10px; margin-bottom: 15px">APPLICATIONS IN PROGRESS</div>
+            <div class="cp-status-row">
+              <div>
+                <div style="font-size: 13px; font-weight: 700">PM Kisan Samman Nidhi</div>
+                <div style="font-size: 11px; color: var(--text2)">Applied on 12 Oct, 2023</div>
+              </div>
+              <span class="cp-status-tag st-pending">Under Verification</span>
+            </div>
+            <div class="cp-status-row">
+              <div>
+                <div style="font-size: 13px; font-weight: 700">Skill India DBT</div>
+                <div style="font-size: 11px; color: var(--text2)">Applied on 28 Sep, 2023</div>
+              </div>
+              <span class="cp-status-tag st-approved">Approved — DBT Scheduled</span>
+            </div>
+          </div>
         </div>
-        <div class="cj-pop-ai">AI INSIGHT: 42% of users prioritize Agricultural schemes this hour.</div>
-      </div>
-      <div class="cj-card">📂</div>
-      <div class="cj-label">Category</div>
-      <div class="cj-sub">Selects niche</div>
-    </div>
 
-    <!-- Node 3 -->
-    <div class="cj-node rv d3">
-      <div class="cj-pop">
-        <div class="cj-pop-title">DISCOVERY <span>LIVE</span></div>
-        <div class="cj-pop-grid">
-          <div class="cj-pop-stat">CLICK RATE<span>62%</span></div>
-          <div class="cj-pop-stat">MATCHES<span>142</span></div>
+        <div>
+          <div class="cp-card-p" style="border-color: var(--cyan); background: rgba(0,229,255,0.02)">
+            <div class="gv-panel-title" style="font-size: 10px; margin-bottom: 15px">RECOMMENDED FOR YOU</div>
+            <div style="font-size: 13px; font-weight: 800; margin-bottom: 5px">Ayushman Bharat</div>
+            <p style="font-size: 11px; color: var(--text2); margin-bottom: 15px">Based on your income bracket, you are 98% likely to be eligible.</p>
+            <button class="nav-cta" style="width: 100%; padding: 10px" onclick="switchCpView('discover')">Check Eligibility</button>
+          </div>
         </div>
-        <div class="cj-pop-ai">AI INSIGHT: High engagement on new "Smart City" initiatives.</div>
       </div>
-      <div class="cj-card">🌍</div>
-      <div class="cj-label">Discovery</div>
-      <div class="cj-sub">List of schemes</div>
     </div>
 
-    <!-- Node 4 -->
-    <div class="cj-node rv d1">
-      <div class="cj-pop">
-        <div class="cj-pop-title">SMART SEARCH <span>LIVE</span></div>
-        <div class="cj-pop-grid">
-          <div class="cj-pop-stat">ACCURACY<span>94%</span></div>
-          <div class="cj-pop-stat">QUERIES<span>840/m</span></div>
+    <!-- VIEW 2: DISCOVERY -->
+    <div id="view-discover" class="cp-view">
+      <div class="cp-filter-panel">
+        <div class="cp-input-wrap">
+          <label>Age</label>
+          <input type="number" id="f-age" class="cp-input" value="25" oninput="runPortalEngine()">
         </div>
-        <div class="cj-pop-ai">AI INSIGHT: Natural language processing matching "Pension" to 12 schemes.</div>
-      </div>
-      <div class="cj-card">🔍</div>
-      <div class="cj-label">Smart Search</div>
-      <div class="cj-sub">Keyword match</div>
-    </div>
-
-    <!-- Node 5 -->
-    <div class="cj-node rv d2">
-      <div class="cj-pop">
-        <div class="cj-pop-title">ELIGIBILITY <span>LIVE</span></div>
-        <div class="cj-pop-grid">
-          <div class="cj-pop-stat">PASS RATE<span>71%</span></div>
-          <div class="cj-pop-stat">SCANS<span>4.2K</span></div>
+        <div class="cp-input-wrap">
+          <label>Annual Income</label>
+          <input type="number" id="f-income" class="cp-input" value="250000" oninput="runPortalEngine()">
         </div>
-        <div class="cj-pop-ai">AI INSIGHT: Automated Aadhar-linked cross-verification active.</div>
-      </div>
-      <div class="cj-card">🧬</div>
-      <div class="cj-label">Eligibility</div>
-      <div class="cj-sub">Instant scan</div>
-    </div>
-
-    <!-- Node 6 -->
-    <div class="cj-node rv d3">
-      <div class="cj-pop">
-        <div class="cj-pop-title">GATEWAY <span>SECURE</span></div>
-        <div class="cj-pop-grid">
-          <div class="cj-pop-stat">LATENCY<span>42ms</span></div>
-          <div class="cj-pop-stat">ENCRYPTION<span>AES-256</span></div>
+        <div class="cp-input-wrap">
+          <label>Occupation</label>
+          <select id="f-occ" class="cp-select" onchange="runPortalEngine()">
+            <option value="Farmer">Farmer</option>
+            <option value="Student">Student</option>
+            <option value="Unemployed">Unemployed</option>
+            <option value="Employee">Private Employee</option>
+          </select>
         </div>
-        <div class="cj-pop-ai">AI INSIGHT: Secure tunnel established for data transmission.</div>
-      </div>
-      <div class="cj-card">⛩️</div>
-      <div class="cj-label">Gateway</div>
-      <div class="cj-sub">Click to apply</div>
-    </div>
-
-    <!-- Node 7 -->
-    <div class="cj-node rv d1">
-      <div class="cj-pop">
-        <div class="cj-pop-title">VERIFICATION <span>LIVE</span></div>
-        <div class="cj-pop-grid">
-          <div class="cj-pop-stat">STATUS<span>Running</span></div>
-          <div class="cj-pop-stat">CHECKS<span>12</span></div>
+        <div class="cp-input-wrap">
+          <label>State</label>
+          <select id="f-state" class="cp-select" onchange="runPortalEngine()">
+            <option value="Karnataka">Karnataka</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Maharashtra">Maharashtra</option>
+          </select>
         </div>
-        <div class="cj-pop-ai">AI INSIGHT: Multimodal verification against 4 ministry databases.</div>
       </div>
-      <div class="cj-card">🛡️</div>
-      <div class="cj-label">Verification</div>
-      <div class="cj-sub">Data integrity</div>
+
+      <div class="sim-cards" id="portal-matches">
+        <!-- Dynamic Cards Here -->
+      </div>
     </div>
 
-    <!-- Node 8 -->
-    <div class="cj-node rv d2">
-      <div class="cj-pop">
-        <div class="cj-pop-title">SUBMISSION <span>FINAL</span></div>
-        <div class="cj-pop-grid">
-          <div class="cj-pop-stat">SUCCESS<span>100%</span></div>
-          <div class="cj-pop-stat">APP IDs<span>824</span></div>
+    <!-- VIEW 3: APPLICATION WIZARD -->
+    <div id="view-apply" class="cp-view">
+      <div class="cp-wizard">
+        <div class="cp-wiz-steps">
+          <div class="cp-wiz-step active" id="w-step-1">1</div>
+          <div class="cp-wiz-step" id="w-step-2">2</div>
+          <div class="cp-wiz-step" id="w-step-3">3</div>
+          <div class="cp-wiz-step" id="w-step-4">4</div>
         </div>
-        <div class="cj-pop-ai">AI INSIGHT: Submission complete. Routed to District Magistrate portal.</div>
-      </div>
-      <div class="cj-card">📡</div>
-      <div class="cj-label">Submission</div>
-      <div class="cj-sub">Final application</div>
-    </div>
 
-    <!-- Node 9 -->
-    <div class="cj-node rv d3">
-      <div class="cj-pop">
-        <div class="cj-pop-title">FEEDBACK <span>OPEN</span></div>
-        <div class="cj-pop-grid">
-          <div class="cj-pop-stat">SENTIMENT<span>Pos</span></div>
-          <div class="cj-pop-stat">SCORE<span>4.8/5</span></div>
+        <div id="wiz-content-1">
+          <h4 style="margin-bottom: 20px">Step 1: Document Upload</h4>
+          <div class="cp-upload-box" onclick="simulateUpload(1)">
+            <div style="font-size: 24px; margin-bottom: 10px">📄</div>
+            <div style="font-size: 13px; font-weight: 700">Upload Aadhar Card</div>
+            <p style="font-size: 11px; color: var(--text2)">PDF or JPEG (Max 2MB)</p>
+            <div id="up-status-1" style="margin-top: 10px; color: var(--green); display:none">✓ Uploaded</div>
+          </div>
+          <button class="nav-cta" style="width: 100%; margin-top: 20px" onclick="nextWiz(2)">Continue →</button>
         </div>
-        <div class="cj-pop-ai">AI INSIGHT: User satisfaction remains high due to 2m completion time.</div>
+
+        <div id="wiz-content-2" style="display:none">
+          <h4 style="margin-bottom: 20px">Step 2: Income Verification</h4>
+          <div class="cp-upload-box" onclick="simulateUpload(2)">
+            <div style="font-size: 24px; margin-bottom: 10px">💰</div>
+            <div style="font-size: 13px; font-weight: 700">Upload Income Certificate</div>
+            <p style="font-size: 11px; color: var(--text2)">Issued within last 6 months</p>
+            <div id="up-status-2" style="margin-top: 10px; color: var(--green); display:none">✓ Verified by AI</div>
+          </div>
+          <button class="nav-cta" style="width: 100%; margin-top: 20px" onclick="nextWiz(3)">Verify Details →</button>
+        </div>
+
+        <div id="wiz-content-3" style="display:none">
+          <h4 style="margin-bottom: 20px">Step 3: Identity Confirmation</h4>
+          <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; margin-bottom: 20px">
+            <label class="dlabel" style="display:block; margin-bottom: 10px">Enter OTP sent to +91 ******4201</label>
+            <input type="text" class="cp-input" placeholder="0 0 0 0 0 0" style="width:100%; text-align:center; font-size:20px; letter-spacing:10px">
+          </div>
+          <button class="nav-cta" style="width: 100%" onclick="nextWiz(4)">Submit Application</button>
+        </div>
+
+        <div id="wiz-content-4" style="display:none; text-align:center">
+          <div style="font-size: 48px; margin-bottom: 20px">🎉</div>
+          <h4 style="margin-bottom: 10px">Application Submitted!</h4>
+          <p style="color: var(--text2); font-size: 13px; margin-bottom: 30px">Your application ID is <strong>GW-882104</strong>. You can track its progress in the 'Track Status' tab.</p>
+          <button class="nav-cta" onclick="switchCpView('dash')">Return to Dashboard</button>
+        </div>
       </div>
-      <div class="cj-card">💬</div>
-      <div class="cj-label">Feedback</div>
-      <div class="cj-sub">Process review</div>
     </div>
-  </div>
 
-  <div class="cj-decision rv">
-    <div class="cj-branch yes">
-      <div style="color:var(--green); font-size:10px; font-weight:800; margin-bottom:10px">ELIGIBILITY DECISION ENGINE</div>
-      <h4>ELIGIBLE → CONTINUE</h4>
-      <p>Secure routing to ministry application server. AI pre-fills 80% of data based on verified credentials.</p>
-      <div style="position:absolute; right:15px; top:15px; font-size:20px">✨</div>
-    </div>
-    <div class="cj-branch no">
-      <div style="color:var(--red); font-size:10px; font-weight:800; margin-bottom:10px">ANOMALY DETECTED</div>
-      <h4>NOT ELIGIBLE → REROUTE</h4>
-      <p>AI recommends 3 alternative schemes based on demographic mismatch. No dead ends in the journey.</p>
-      <div style="position:absolute; right:15px; top:15px; font-size:20px">🤖</div>
-    </div>
-  </div>
-
-  <div class="gv-panel-title rv" style="margin-top: 60px; margin-bottom: 20px">LIVE USER ACTIVITY STREAM</div>
-  <div class="cj-stream rv">
-    <div class="cj-stream-inner" id="cj-stream-log">
-      <!-- Logs will be injected by JS -->
+    <!-- VIEW 4: TRACKING -->
+    <div id="view-track" class="cp-view">
+      <h3 style="margin-bottom: 30px">Application Tracker</h3>
+      <div class="cp-card-p">
+        <div style="display: flex; gap: 20px">
+          <div style="flex: 1">
+            <div style="font-size: 16px; font-weight: 800">PM Kisan Samman Nidhi</div>
+            <div style="font-size: 12px; color: var(--text2)">ID: GW-99012 | Applied: 12 Oct 2023</div>
+            
+            <div style="margin-top: 30px">
+              <div class="cp-status-row"><div style="color: var(--green)">✓ Document Verification</div><div style="font-size: 11px">Completed</div></div>
+              <div class="cp-status-row"><div style="color: var(--cyan)">● District Magistrate Review</div><div style="font-size: 11px">In Progress</div></div>
+              <div class="cp-status-row"><div style="opacity: 0.3">○ Ministry Approval</div><div style="font-size: 11px; opacity: 0.3">Pending</div></div>
+              <div class="cp-status-row"><div style="opacity: 0.3">○ DBT Disbursement</div><div style="font-size: 11px; opacity: 0.3">Pending</div></div>
+            </div>
+          </div>
+          <div style="width: 200px; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 20px; text-align:center">
+            <div class="dlabel">Est. Approval</div>
+            <div class="dnum" style="font-size: 20px">4 Days</div>
+            <div style="margin-top: 20px; font-size: 10px; color: var(--green)">AI CONFIDENCE: 94%</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1353,6 +1343,20 @@ window.openGodView = function() {
       });
       L.marker([s.lat, s.lng], {icon}).addTo(gvMap);
     });
+
+    // ════════ IMPRESS MODE: OJASH & PARTNER ════════
+    const ojashIcon = L.divIcon({
+      className: 'gv-pulse-icon',
+      html: `<div style="width:24px;height:24px;background:var(--cyan);border-radius:50%;box-shadow:0 0 30px var(--cyan);animation:gvPulse 0.8s infinite alternate; margin-top:-12px; margin-left:-12px; display:flex; align-items:center; justify-content:center; color:#000; font-weight:800; font-size:12px; border:2px solid #fff">O</div>`
+    });
+    L.marker([12.9716, 77.5946], {icon: ojashIcon}).addTo(gvMap).bindTooltip("OJASH (COMMANDING OFFICER)", {permanent: true, direction: 'top', className: 'tactical-tooltip'});
+
+    const gfIcon = L.divIcon({
+      className: 'gv-pulse-icon',
+      html: `<div style="width:24px;height:24px;background:var(--gold);border-radius:50%;box-shadow:0 0 30px var(--gold);animation:gvPulse 0.8s infinite alternate; margin-top:-12px; margin-left:-12px; display:flex; align-items:center; justify-content:center; color:#000; font-weight:800; font-size:12px; border:2px solid #fff">❤</div>`
+    });
+    L.marker([12.9352, 77.6245], {icon: gfIcon}).addTo(gvMap).bindTooltip("SPECIAL INTEL (PRIORITY ASSET)", {permanent: true, direction: 'top', className: 'tactical-tooltip'});
+    // ════════════════════════════════════════════════
   } else {
     setTimeout(() => gvMap.invalidateSize(), 100);
   }
@@ -1455,43 +1459,72 @@ function logout() {
   window.location.reload();
 }
 
-/* ════════ CITIZEN JOURNEY LOGS ════════ */
-function initCJStream() {
-  const log = document.getElementById('cj-stream-log');
-  if (!log) return;
+/* ════════ CITIZEN PORTAL ENGINE ════════ */
+function switchCpView(view) {
+  document.querySelectorAll('.cp-view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.cp-nav-item').forEach(v => v.classList.remove('active'));
   
-  const actions = [
-    { txt: 'User from Bihar searched "PM Kisan"', type: 'info' },
-    { txt: 'Eligibility confirmed for Ayushman Bharat', type: 'success' },
-    { txt: 'Application submitted — Rajasthan', type: 'success' },
-    { txt: 'AI suggested 3 matching schemes', type: 'info' },
-    { txt: 'Portal Entry: New Session from Bangalore', type: 'info' },
-    { txt: 'Document Verification: Income Certificate Verified', type: 'success' },
-    { txt: 'Anomaly Scan: No issues found for Odisha DB', type: 'info' },
-    { txt: 'Feedback Received: 5/5 from Kerala User', type: 'success' },
-    { txt: 'Smart Search: "Scholarship" matched 8 results', type: 'info' }
-  ];
+  document.getElementById('view-' + view).classList.add('active');
+  const navItems = document.querySelectorAll('.cp-nav-item');
+  if (view === 'dash') navItems[0].classList.add('active');
+  if (view === 'discover') navItems[1].classList.add('active');
+  if (view === 'track') navItems[2].classList.add('active');
+}
 
-  function addLog() {
-    const a = actions[Math.floor(Math.random() * actions.length)];
-    const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
-    const div = document.createElement('div');
-    div.className = 'cj-msg';
-    div.innerHTML = `<span class="time">[${time}]</span> <span class="action">${a.txt}</span>`;
-    log.appendChild(div);
-    
-    if (log.children.length > 8) {
-      log.removeChild(log.firstChild);
-    }
+function runPortalEngine() {
+  const age = parseInt(document.getElementById('f-age').value);
+  const income = parseInt(document.getElementById('f-income').value);
+  const occ = document.getElementById('f-occ').value;
+  
+  const matches = SIM_DATA.filter(s => 
+    age >= s.age[0] && age <= s.age[1] && 
+    income <= s.income[1] &&
+    (s.occ === 'any' || s.occ === occ)
+  );
+
+  const grid = document.getElementById('portal-matches');
+  grid.innerHTML = matches.map(s => `
+    <div class="sim-card" onclick="startApplication('${s.name}')">
+      <div style="font-size: 10px; color: var(--text2); margin-bottom: 8px">${s.ministry}</div>
+      <div style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 12px">${s.name}</div>
+      <div style="font-size: 11px; color: var(--text2); margin-bottom: 15px">Benefits: Financial assistance and direct subsidy transfer.</div>
+      <button class="nav-cta" style="width: 100%; padding: 8px; background: transparent; border: 1px solid var(--cyan); color: var(--cyan)">Apply Now →</button>
+    </div>
+  `).join('');
+}
+
+function startApplication(schemeName) {
+  switchCpView('apply');
+  // Reset wizard
+  nextWiz(1);
+  document.getElementById('up-status-1').style.display = 'none';
+  document.getElementById('up-status-2').style.display = 'none';
+}
+
+function nextWiz(step) {
+  for(let i=1; i<=4; i++) {
+    document.getElementById('wiz-content-' + i).style.display = i === step ? 'block' : 'none';
+    const s = document.getElementById('w-step-' + i);
+    s.classList.remove('active', 'done');
+    if (i < step) s.classList.add('done');
+    if (i === step) s.classList.add('active');
   }
+}
 
-  setInterval(addLog, 3000);
-  for(let i=0; i<5; i++) setTimeout(addLog, i*400);
+function simulateUpload(id) {
+  const status = document.getElementById('up-status-' + id);
+  status.style.display = 'block';
+  status.textContent = 'Scanning...';
+  setTimeout(() => {
+    status.textContent = '✓ Verified by Gov-AI';
+  }, 1000);
 }
 
 /* ════════ BOOT ════════ */
 checkAuth();
-initCJStream();
+const name = localStorage.getItem('gw_name');
+if (name) document.getElementById('cp-user-name').textContent = name;
+runPortalEngine();
 loadStats();
 loadAlerts();
 loadSchemes();
