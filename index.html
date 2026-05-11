@@ -531,24 +531,57 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
     <button class="gov-modal-close" onclick="closeSchemeModal()">✕</button>
     <div class="tag" id="sm-ministry" style="margin-bottom: 16px">Ministry</div>
     <h2 class="stitle" id="sm-title" style="font-size:32px; margin-bottom:12px; background: linear-gradient(to right, #fff, #a0aec0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Scheme Name</h2>
-    <p class="ssub" id="sm-desc" style="margin-bottom:32px; max-width:100%; line-height: 1.6; font-size:14px">Description</p>
     
-    <div class="dgrid" style="grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px">
-      <div class="sm-stat"><div class="dlabel">Budget Allocated</div><div class="dnum" id="sm-budget" style="font-size:24px">₹0 Cr</div></div>
-      <div class="sm-stat"><div class="dlabel">Funds Disbursed</div><div class="dnum" id="sm-disbursed" style="font-size:24px; color:var(--cyan)">₹0 Cr</div></div>
-      <div class="sm-stat"><div class="dlabel">Beneficiaries</div><div class="dnum" id="sm-beneficiaries" style="font-size:24px; color:var(--gold)">0</div></div>
-      <div class="sm-stat"><div class="dlabel">Implementation</div><div class="dnum" id="sm-impl" style="font-size:24px; color:var(--green)">0%</div></div>
+    <div class="sm-tabs" style="display:flex; gap:20px; border-bottom:1px solid rgba(255,255,255,0.05); margin-bottom:20px">
+      <div class="sm-tab on" onclick="setSmTab(this,'info')" style="padding:10px 0; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; color:var(--text2); position:relative">DETAILS</div>
+      <div class="sm-tab" onclick="setSmTab(this,'elig')" style="padding:10px 0; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; color:var(--text2); position:relative">ELIGIBILITY & APPLY</div>
     </div>
-    
-    <div style="background:rgba(255,255,255,.02); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); margin-bottom:32px">
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:12px; color:var(--text2); font-weight:700; letter-spacing:1px; text-transform:uppercase"><span>Fund Utilization</span><span id="sm-util-pct" style="color:var(--gold)">0%</span></div>
-      <div style="height:8px; background:var(--ink); border-radius:4px; overflow:hidden"><div id="sm-util-bar" style="height:100%; background:linear-gradient(90deg, var(--gold), #ffdf80); width:0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1)"></div></div>
+
+    <div id="sm-content-info">
+      <p class="ssub" id="sm-desc" style="margin-bottom:32px; max-width:100%; line-height: 1.6; font-size:14px">Description</p>
+      <div class="dgrid" style="grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px">
+        <div class="sm-stat"><div class="dlabel">Budget Allocated</div><div class="dnum" id="sm-budget" style="font-size:24px">₹0 Cr</div></div>
+        <div class="sm-stat"><div class="dlabel">Funds Disbursed</div><div class="dnum" id="sm-disbursed" style="font-size:24px; color:var(--cyan)">₹0 Cr</div></div>
+        <div class="sm-stat"><div class="dlabel">Beneficiaries</div><div class="dnum" id="sm-beneficiaries" style="font-size:24px; color:var(--gold)">0</div></div>
+        <div class="sm-stat"><div class="dlabel">Implementation</div><div class="dnum" id="sm-impl" style="font-size:24px; color:var(--green)">0%</div></div>
+      </div>
+      <div style="background:rgba(255,255,255,.02); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); margin-bottom:32px">
+        <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:12px; color:var(--text2); font-weight:700; letter-spacing:1px; text-transform:uppercase"><span>Fund Utilization</span><span id="sm-util-pct" style="color:var(--gold)">0%</span></div>
+        <div style="height:8px; background:var(--ink); border-radius:4px; overflow:hidden"><div id="sm-util-bar" style="height:100%; background:linear-gradient(90deg, var(--gold), #ffdf80); width:0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1)"></div></div>
+      </div>
     </div>
-    
-    <button class="btn-danger" id="sm-report-btn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-      Report Implementation Issue / Delay
-    </button>
+
+    <div id="sm-content-elig" style="display:none">
+      <div class="gv-panel-title" style="margin-bottom:15px; font-size:11px; color:var(--cyan)">CITIZEN ELIGIBILITY ENGINE</div>
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:24px; margin-bottom:20px">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px">
+          <div>
+            <label class="dlabel" style="display:block; margin-bottom:10px; font-size:10px">Your Age</label>
+            <input type="number" id="elig-age" placeholder="25" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:12px; border-radius:8px; outline:none; font-family:'Space Mono',monospace">
+          </div>
+          <div>
+            <label class="dlabel" style="display:block; margin-bottom:10px; font-size:10px">Annual Family Income (₹)</label>
+            <input type="number" id="elig-income" placeholder="2,50,000" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); color:#fff; padding:12px; border-radius:8px; outline:none; font-family:'Space Mono',monospace">
+          </div>
+        </div>
+        <button onclick="checkEligibility()" style="width:100%; padding:14px; background:var(--cyan); color:#000; border:none; border-radius:8px; font-weight:800; cursor:pointer; font-family:'Space Mono',monospace; letter-spacing:1px">SCAN ELIGIBILITY</button>
+        
+        <div id="elig-result" style="margin-top:20px; display:none; padding:20px; border-radius:10px; text-align:center; animation: slideUp 0.4s ease"></div>
+      </div>
+      
+      <div id="apply-section" style="display:none; margin-top:20px; animation: fadeIn 0.6s ease">
+        <div class="gv-panel-title" style="margin-bottom:15px; font-size:11px; color:var(--cyan)">SECURE APPLICATION GATEWAY</div>
+        <button onclick="submitApplication()" id="btn-apply-final" style="width:100%; padding:16px; background:transparent; border:1px solid var(--cyan); color:var(--cyan); border-radius:8px; font-weight:800; cursor:pointer; font-family:'Space Mono',monospace; transition:all 0.3s">SUBMIT OFFICIAL APPLICATION →</button>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:16px">
+      <button class="btn-danger" id="sm-report-btn" style="flex:1">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        Report Issue
+      </button>
+      <button class="nav-cta" onclick="openFeedback()" style="flex:1; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02)">Give Feedback</button>
+    </div>
   </div>
 </div>
 
@@ -950,10 +983,74 @@ async function openSchemeModal(id) {
     document.getElementById('sm-util-bar').style.width = `${utilPct}%`;
     
     document.getElementById('sm-report-btn').onclick = () => reportIssue(s.name);
+    
+    // Reset tabs and inputs
+    document.querySelectorAll('.sm-tab').forEach(t=>t.classList.remove('on'));
+    document.querySelector('.sm-tab').classList.add('on');
+    document.getElementById('sm-content-info').style.display = 'block';
+    document.getElementById('sm-content-elig').style.display = 'none';
+    document.getElementById('elig-result').style.display = 'none';
+    document.getElementById('apply-section').style.display = 'none';
+    document.getElementById('elig-age').value = '';
+    document.getElementById('elig-income').value = '';
+
     document.getElementById('scheme-modal').classList.add('open');
   } catch(e) { console.error('Error fetching scheme details', e); }
 }
 window.closeSchemeModal = function() { document.getElementById('scheme-modal').classList.remove('open'); };
+
+function setSmTab(el, tab) {
+  document.querySelectorAll('.sm-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('sm-content-info').style.display = tab === 'info' ? 'block' : 'none';
+  document.getElementById('sm-content-elig').style.display = tab === 'elig' ? 'block' : 'none';
+}
+
+function checkEligibility() {
+  const age = parseInt(document.getElementById('elig-age').value);
+  const income = parseInt(document.getElementById('elig-income').value);
+  const res = document.getElementById('elig-result');
+  const apply = document.getElementById('apply-section');
+  
+  if (!age || !income) { alert('Please enter all details for the eligibility scanner.'); return; }
+  
+  res.style.display = 'block';
+  // Dynamic eligibility logic
+  const isEligible = (income < 500000 && age > 18);
+  
+  if (isEligible) {
+    res.style.background = 'rgba(0,255,157,0.1)';
+    res.style.border = '1px solid rgba(0,255,157,0.3)';
+    res.style.color = '#00ff9d';
+    res.innerHTML = '<div style="font-weight:800; font-size:16px">✅ ELIGIBLE</div><div style="font-size:11px; margin-top:5px; opacity:0.8">Your profile matches national scheme criteria.</div>';
+    apply.style.display = 'block';
+  } else {
+    res.style.background = 'rgba(255,71,87,0.1)';
+    res.style.border = '1px solid rgba(255,71,87,0.3)';
+    res.style.color = '#ff4757';
+    res.innerHTML = '<div style="font-weight:800; font-size:16px">❌ NOT ELIGIBLE</div><div style="font-size:11px; margin-top:5px; opacity:0.8">Income or age bracket exceeds scheme limits.</div>';
+    apply.style.display = 'none';
+  }
+}
+
+function submitApplication() {
+  const btn = document.getElementById('btn-apply-final');
+  btn.disabled = true;
+  btn.textContent = 'SECURE TRANSMISSION IN PROGRESS...';
+  
+  setTimeout(() => {
+    btn.style.background = '#00ff9d';
+    btn.style.color = '#000';
+    btn.style.borderColor = '#00ff9d';
+    btn.textContent = '✅ APPLICATION SUBMITTED SUCCESSFULLY';
+    alert('Application ID: GW-' + Math.floor(Math.random()*900000+100000) + '\nYour application has been routed to the District Office for verification.');
+  }, 2000);
+}
+
+function openFeedback() {
+  const f = prompt('User Portal Feedback:\nHow can we improve the scheme application process?');
+  if (f) alert('Thank you for your feedback. It has been recorded in our Service Improvement Log.');
+}
 
 async function reportIssue(schemeName) {
   const msg = prompt(`Report issue for ${schemeName}:\nPlease describe the discrepancy (e.g. Funds not received in village X, Ghost beneficiaries spotted)`);
