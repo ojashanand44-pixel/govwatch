@@ -305,6 +305,7 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
   </ul>
   <button class="nav-cta">Request Access →</button>
   <div id="user-nav" style="display:none; align-items:center; gap:15px">
+    <div id="sim-badge" style="display:none; background:rgba(0,229,255,0.1); border:1px solid rgba(0,229,255,0.3); color:var(--cyan); padding:4px 8px; border-radius:4px; font-size:9px; font-family:'Space Mono',monospace; letter-spacing:1px">SIMULATION ACTIVE</div>
     <span id="user-name" style="color:#fff; font-weight:600; font-size:13px; font-family:'Syne',sans-serif"></span>
     <button class="btn-logout" onclick="logout()" style="padding: 6px 12px; font-size: 11px; background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.3); color: #ff4757; border-radius: 6px; cursor: pointer; font-family:'Space Mono',monospace">LOGOUT</button>
   </div>
@@ -843,7 +844,9 @@ const API = (window.location.protocol === 'file:') ? 'http://localhost:3000/api'
             (window.location.hostname.includes('github.io')) ? 'https://ojashanand44-pixel.github.io/api' : 
             window.location.origin + '/api';
 
-let isDemoMode = false;
+// Pre-detect Simulation Mode for GitHub/Static hosts
+let isDemoMode = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
+if (isDemoMode) console.log('🛡️ Intelligence Sandbox Active');
 
 /* ════════ LOAD STATS FROM API ════════ */
 async function loadStats(){
@@ -897,6 +900,7 @@ async function loadStats(){
 
 /* ════════ LOAD ALERTS FROM API ════════ */
 async function loadAlerts(){
+  if (isDemoMode) return;
   try{
     const res=await fetch(`${API}/alerts?resolved=false`);
     const alerts=await res.json();
@@ -913,6 +917,7 @@ async function loadAlerts(){
 
 /* ════════ LOAD SCHEMES FROM API ════════ */
 async function loadSchemes(cat='all'){
+  if (isDemoMode) return;
   try{
     const res=await fetch(`${API}/schemes${cat!=='all'?'?category='+cat:''}`);
     const schemes=await res.json();
@@ -1124,6 +1129,7 @@ function checkAuth() {
     if (navCta) navCta.style.display = 'none';
     userNav.style.display = 'flex';
     userName.textContent = '👤 ' + (name || 'Officer');
+    if (isDemoMode && document.getElementById('sim-badge')) document.getElementById('sim-badge').style.display = 'block';
   } else if (userNav) {
     if (navCta) navCta.style.display = 'block';
     userNav.style.display = 'none';
