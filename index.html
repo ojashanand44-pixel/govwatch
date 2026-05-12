@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -216,41 +220,16 @@ section{padding:120px 64px}
 .sm-tab:hover{ opacity: 1; color: var(--cyan); }
 .sm-tab.on{ opacity: 1; color: var(--cyan); border-bottom: 2px solid var(--cyan); }
 
-/* Citizen Portal Section */
-#citizen-portal { position: relative; padding: 100px 64px; background: var(--ink2); min-height: 800px; border-bottom: 1px solid var(--border); }
-.cp-container { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 24px; min-height: 700px; display: grid; grid-template-rows: 80px 1fr; overflow: hidden; backdrop-filter: blur(20px); }
-.cp-header { background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; }
-.cp-nav { display: flex; gap: 30px; }
-.cp-nav-item { font-size: 11px; font-weight: 800; color: var(--text2); letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: 0.3s; padding: 10px 0; border-bottom: 2px solid transparent; }
-.cp-nav-item.active { color: var(--cyan); border-color: var(--cyan); }
-
-.cp-view { padding: 40px; display: none; animation: fadeIn 0.4s ease; }
-.cp-view.active { display: block; }
-
-/* Dashboard Styles */
-.cp-dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
-.cp-card-p { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; margin-bottom: 20px; }
-.cp-status-row { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.cp-status-tag { padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-.st-pending { background: rgba(245,200,66,0.1); color: var(--gold); }
-.st-approved { background: rgba(0,255,157,0.1); color: var(--green); }
-
-/* Discovery Styles */
-.cp-filter-panel { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 16px; }
-.cp-input-wrap { display: flex; flex-direction: column; gap: 8px; }
-.cp-input-wrap label { font-size: 10px; font-weight: 800; color: var(--text2); text-transform: uppercase; }
-.cp-select, .cp-input { background: #060810; border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px; outline: none; font-size: 13px; }
-
-/* Application Workflow */
-.cp-wizard { max-width: 600px; margin: 0 auto; }
-.cp-wiz-steps { display: flex; justify-content: space-between; margin-bottom: 40px; position: relative; }
-.cp-wiz-steps::after { content: ""; position: absolute; top: 15px; left: 0; right: 0; height: 2px; background: rgba(255,255,255,0.05); z-index: 1; }
-.cp-wiz-step { width: 32px; height: 32px; background: var(--ink); border: 2px solid rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; position: relative; z-index: 2; color: var(--text2); transition: 0.3s; }
-.cp-wiz-step.active { border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 15px var(--cyan); }
-.cp-wiz-step.done { background: var(--cyan); border-color: var(--cyan); color: #000; }
-
-.cp-upload-box { border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: 0.3s; }
-.cp-upload-box:hover { border-color: var(--cyan); background: rgba(0,229,255,0.02); }
+/* Unified Citizen Portal V4.2 Styles */
+#citizen-portal { position: relative; padding: 100px 64px; background: #060810; min-height: 800px; border-bottom: 1px solid var(--border); }
+#gcp-root { min-height: 700px; }
+.cp-card-p { background: rgba(255,255,255,0.03); border: 1px solid rgba(80,100,180,0.12); border-radius: 16px; padding: 25px; margin-bottom: 20px; transition: all 0.3s; }
+.cp-status-row { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(80,100,180,0.08); }
+.cp-status-tag { padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; font-family: 'Space Mono', monospace; }
+.cp-input, .cp-select { background: #0e1525; border: 1px solid rgba(80,100,180,0.12); color: #fff; padding: 12px; border-radius: 8px; outline: none; font-size: 13px; transition: 0.3s; }
+.cp-input:focus { border-color: #00e5ff; box-shadow: 0 0 15px rgba(0,229,255,0.1); }
+.cp-nav-item { font-size: 11px; font-weight: 800; color: #4a5880; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: 0.3s; padding: 15px 18px; border-bottom: 2px solid transparent; background: none; border-top: none; border-left: none; border-right: none; font-family: 'Syne', sans-serif; }
+.cp-nav-item.active { color: #00e5ff; border-bottom-color: #00e5ff; }
 
 /* Right AI */
 .gv-ai-panel { padding: 16px; overflow-y: auto; }
@@ -400,169 +379,13 @@ footer{background:var(--ink2);border-top:1px solid var(--border);padding:56px 64
   </div>
 </section>
 
-<!-- CITIZEN SERVICE PORTAL -->
+<!-- UNIFIED CITIZEN SERVICE PORTAL V4.2 -->
 <section id="citizen-portal">
   <div class="tag rv">User Portal v4.2</div>
   <h2 class="rv">Unified <em>Citizen</em> Service</h2>
-  <p class="rv" style="max-width: 600px; margin-bottom: 40px">A real-time gateway for scheme discovery, automated eligibility scanning, and secure application submission.</p>
+  <p class="rv" style="max-width: 600px; margin-bottom: 40px">A comprehensive AI-integrated gateway for scheme discovery, automated eligibility scanning, and secure application submission.</p>
 
-  <div class="cp-container rv d1">
-    <div class="cp-header">
-      <div class="cp-nav">
-        <div class="cp-nav-item active" onclick="switchCpView('dash')">Dashboard</div>
-        <div class="cp-nav-item" onclick="switchCpView('discover')">Find Schemes</div>
-        <div class="cp-nav-item" onclick="switchCpView('track')">Track Status</div>
-      </div>
-      <div style="font-size: 12px; color: var(--cyan); font-family: 'Space Mono', monospace">SESSION_ID: 98X-T21</div>
-    </div>
-
-    <!-- VIEW 1: DASHBOARD -->
-    <div id="view-dash" class="cp-view active">
-      <h3 style="font-size: 24px; margin-bottom: 5px">Good Evening, <span id="cp-user-name">Ojash</span></h3>
-      <p style="color: var(--text2); margin-bottom: 30px">You have 2 applications pending review.</p>
-
-      <div class="cp-dash-grid">
-        <div>
-          <div class="cp-card-p">
-            <div class="gv-panel-title" style="font-size: 10px; margin-bottom: 15px">APPLICATIONS IN PROGRESS</div>
-            <div class="cp-status-row">
-              <div>
-                <div style="font-size: 13px; font-weight: 700">PM Kisan Samman Nidhi</div>
-                <div style="font-size: 11px; color: var(--text2)">Applied on 12 Oct, 2023</div>
-              </div>
-              <span class="cp-status-tag st-pending">Under Verification</span>
-            </div>
-            <div class="cp-status-row">
-              <div>
-                <div style="font-size: 13px; font-weight: 700">Skill India DBT</div>
-                <div style="font-size: 11px; color: var(--text2)">Applied on 28 Sep, 2023</div>
-              </div>
-              <span class="cp-status-tag st-approved">Approved — DBT Scheduled</span>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="cp-card-p" style="border-color: var(--cyan); background: rgba(0,229,255,0.02)">
-            <div class="gv-panel-title" style="font-size: 10px; margin-bottom: 15px">RECOMMENDED FOR YOU</div>
-            <div style="font-size: 13px; font-weight: 800; margin-bottom: 5px">Ayushman Bharat</div>
-            <p style="font-size: 11px; color: var(--text2); margin-bottom: 15px">Based on your income bracket, you are 98% likely to be eligible.</p>
-            <button class="nav-cta" style="width: 100%; padding: 10px" onclick="switchCpView('discover')">Check Eligibility</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW 2: DISCOVERY -->
-    <div id="view-discover" class="cp-view">
-      <div class="cp-filter-panel">
-        <div class="cp-input-wrap">
-          <label>Age</label>
-          <input type="number" id="f-age" class="cp-input" value="25" oninput="runPortalEngine()">
-        </div>
-        <div class="cp-input-wrap">
-          <label>Annual Income</label>
-          <input type="number" id="f-income" class="cp-input" value="250000" oninput="runPortalEngine()">
-        </div>
-        <div class="cp-input-wrap">
-          <label>Occupation</label>
-          <select id="f-occ" class="cp-select" onchange="runPortalEngine()">
-            <option value="Farmer">Farmer</option>
-            <option value="Student">Student</option>
-            <option value="Unemployed">Unemployed</option>
-            <option value="Employee">Private Employee</option>
-          </select>
-        </div>
-        <div class="cp-input-wrap">
-          <label>State</label>
-          <select id="f-state" class="cp-select" onchange="runPortalEngine()">
-            <option value="Karnataka">Karnataka</option>
-            <option value="Bihar">Bihar</option>
-            <option value="Maharashtra">Maharashtra</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="sim-cards" id="portal-matches">
-        <!-- Dynamic Cards Here -->
-      </div>
-    </div>
-
-    <!-- VIEW 3: APPLICATION WIZARD -->
-    <div id="view-apply" class="cp-view">
-      <div class="cp-wizard">
-        <div class="cp-wiz-steps">
-          <div class="cp-wiz-step active" id="w-step-1">1</div>
-          <div class="cp-wiz-step" id="w-step-2">2</div>
-          <div class="cp-wiz-step" id="w-step-3">3</div>
-          <div class="cp-wiz-step" id="w-step-4">4</div>
-        </div>
-
-        <div id="wiz-content-1">
-          <h4 style="margin-bottom: 20px">Step 1: Document Upload</h4>
-          <div class="cp-upload-box" onclick="simulateUpload(1)">
-            <div style="font-size: 24px; margin-bottom: 10px">📄</div>
-            <div style="font-size: 13px; font-weight: 700">Upload Aadhar Card</div>
-            <p style="font-size: 11px; color: var(--text2)">PDF or JPEG (Max 2MB)</p>
-            <div id="up-status-1" style="margin-top: 10px; color: var(--green); display:none">✓ Uploaded</div>
-          </div>
-          <button class="nav-cta" style="width: 100%; margin-top: 20px" onclick="nextWiz(2)">Continue →</button>
-        </div>
-
-        <div id="wiz-content-2" style="display:none">
-          <h4 style="margin-bottom: 20px">Step 2: Income Verification</h4>
-          <div class="cp-upload-box" onclick="simulateUpload(2)">
-            <div style="font-size: 24px; margin-bottom: 10px">💰</div>
-            <div style="font-size: 13px; font-weight: 700">Upload Income Certificate</div>
-            <p style="font-size: 11px; color: var(--text2)">Issued within last 6 months</p>
-            <div id="up-status-2" style="margin-top: 10px; color: var(--green); display:none">✓ Verified by AI</div>
-          </div>
-          <button class="nav-cta" style="width: 100%; margin-top: 20px" onclick="nextWiz(3)">Verify Details →</button>
-        </div>
-
-        <div id="wiz-content-3" style="display:none">
-          <h4 style="margin-bottom: 20px">Step 3: Identity Confirmation</h4>
-          <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; margin-bottom: 20px">
-            <label class="dlabel" style="display:block; margin-bottom: 10px">Enter OTP sent to +91 ******4201</label>
-            <input type="text" class="cp-input" placeholder="0 0 0 0 0 0" style="width:100%; text-align:center; font-size:20px; letter-spacing:10px">
-          </div>
-          <button class="nav-cta" style="width: 100%" onclick="nextWiz(4)">Submit Application</button>
-        </div>
-
-        <div id="wiz-content-4" style="display:none; text-align:center">
-          <div style="font-size: 48px; margin-bottom: 20px">🎉</div>
-          <h4 style="margin-bottom: 10px">Application Submitted!</h4>
-          <p style="color: var(--text2); font-size: 13px; margin-bottom: 30px">Your application ID is <strong>GW-882104</strong>. You can track its progress in the 'Track Status' tab.</p>
-          <button class="nav-cta" onclick="switchCpView('dash')">Return to Dashboard</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW 4: TRACKING -->
-    <div id="view-track" class="cp-view">
-      <h3 style="margin-bottom: 30px">Application Tracker</h3>
-      <div class="cp-card-p">
-        <div style="display: flex; gap: 20px">
-          <div style="flex: 1">
-            <div style="font-size: 16px; font-weight: 800">PM Kisan Samman Nidhi</div>
-            <div style="font-size: 12px; color: var(--text2)">ID: GW-99012 | Applied: 12 Oct 2023</div>
-            
-            <div style="margin-top: 30px">
-              <div class="cp-status-row"><div style="color: var(--green)">✓ Document Verification</div><div style="font-size: 11px">Completed</div></div>
-              <div class="cp-status-row"><div style="color: var(--cyan)">● District Magistrate Review</div><div style="font-size: 11px">In Progress</div></div>
-              <div class="cp-status-row"><div style="opacity: 0.3">○ Ministry Approval</div><div style="font-size: 11px; opacity: 0.3">Pending</div></div>
-              <div class="cp-status-row"><div style="opacity: 0.3">○ DBT Disbursement</div><div style="font-size: 11px; opacity: 0.3">Pending</div></div>
-            </div>
-          </div>
-          <div style="width: 200px; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 20px; text-align:center">
-            <div class="dlabel">Est. Approval</div>
-            <div class="dnum" style="font-size: 20px">4 Days</div>
-            <div style="margin-top: 20px; font-size: 10px; color: var(--green)">AI CONFIDENCE: 94%</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="gcp-root" class="rv d1"></div>
 </section>
 
 <section id="schemes">
@@ -1444,72 +1267,109 @@ function logout() {
   window.location.reload();
 }
 
-/* ════════ CITIZEN PORTAL ENGINE ════════ */
-function switchCpView(view) {
-  document.querySelectorAll('.cp-view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.cp-nav-item').forEach(v => v.classList.remove('active'));
-  
-  document.getElementById('view-' + view).classList.add('active');
-  const navItems = document.querySelectorAll('.cp-nav-item');
-  if (view === 'dash') navItems[0].classList.add('active');
-  if (view === 'discover') navItems[1].classList.add('active');
-  if (view === 'track') navItems[2].classList.add('active');
-}
+/* ════════ UNIFIED CITIZEN PORTAL V4.2 ENGINE (REACT) ════════ */
+const { useState, useMemo } = React;
 
-function runPortalEngine() {
-  const age = parseInt(document.getElementById('f-age').value);
-  const income = parseInt(document.getElementById('f-income').value);
-  const occ = document.getElementById('f-occ').value;
-  
-  const matches = SIM_DATA.filter(s => 
-    age >= s.age[0] && age <= s.age[1] && 
-    income <= s.income[1] &&
-    (s.occ === 'any' || s.occ === occ)
+const CP_C = {
+  bg: '#060810', surface: '#111828', card: '#0e1525', border: 'rgba(80,100,180,0.12)',
+  gold: '#f5c842', cyan: '#00e5ff', green: '#00ff9d', red: '#ff4757', text: '#b8c4e8', muted: '#4a5880'
+};
+
+const CP_SCHEMES = [
+  { id: 1, name: "PM Kisan Samman Nidhi", icon: "🌾", ministry: "Ministry of Agriculture & Farmers Welfare", category: "Agriculture", tagline: "₹6,000/year direct income support to small & marginal farmers", description: "Provides income support of ₹6,000/year to farmer families in three installments of ₹2,000, credited directly to bank accounts.", benefits: ["₹2,000 every 4 months", "Direct bank transfer", "No middlemen"], eligibility: { minAge: 18, maxAge: 70, maxIncome: 200000, occupations: ["Farmer"] }, requiredDocs: ["Aadhar Card", "Land Records"], deadline: "Rolling", approvalDays: 21, beneficiaries: "11.8 Cr", status: "active" },
+  { id: 2, name: "Ayushman Bharat", icon: "🏥", ministry: "Ministry of Health & Family Welfare", category: "Health", tagline: "₹5 lakh/year health insurance for secondary care", description: "World's largest health insurance scheme providing ₹5 lakh coverage per family per year.", benefits: ["₹5 lakh/year cover", "Cashless treatment", "No family size cap"], eligibility: { minAge: 0, maxAge: 99, maxIncome: 500000, occupations: "any" }, requiredDocs: ["Aadhar Card", "Ration Card"], deadline: "Rolling", approvalDays: 14, beneficiaries: "24.9 Cr", status: "active" },
+  { id: 6, name: "Skill India / PMKVY", icon: "📚", ministry: "Ministry of Skill Development", category: "Skill", tagline: "Free skill training with placement support", description: "Enables youth to train in market-relevant skills with certification.", benefits: ["Free certification", "Placement assistance"], eligibility: { minAge: 15, maxAge: 45, maxIncome: 999999, occupations: ["Student", "Unemployed"] }, requiredDocs: ["Aadhar Card", "10th Certificate"], deadline: "Rolling", approvalDays: 5, beneficiaries: "1.4 Cr", status: "active" }
+];
+
+const CP_INIT_APPS = [
+  { id: "GW-99012", schemeName: "PM Kisan Samman Nidhi", appliedDate: "12 Oct 2023", status: "under_review", timeline: [{ step: "Doc Verification", s: "done", date: "14 Oct" }, { step: "DM Review", s: "active", date: "In Progress" }], estDays: 4 },
+  { id: "GW-88201", schemeName: "Skill India", appliedDate: "28 Sep 2023", status: "approved", timeline: [{ step: "Enrollment", s: "done", date: "10 Oct" }], estDays: 0 }
+];
+
+function UnifiedPortal() {
+  const [view, setView] = useState('dashboard');
+  const [scheme, setScheme] = useState(null);
+  const [apps, setApps] = useState(CP_INIT_APPS);
+  const [wizStep, setWizStep] = useState(1);
+  const [docSt, setDocSt] = useState({});
+  const [eligR, setEligR] = useState(null);
+  const [search, setSearch] = useState('');
+
+  const profile = { name: 'Ojash', age: 25, income: 250000, occupation: 'Farmer' };
+  const matches = (s, p) => p.age >= s.eligibility.minAge && p.age <= s.eligibility.maxAge && p.income <= s.eligibility.maxIncome && (s.eligibility.occupations === 'any' || s.eligibility.occupations.includes(p.occupation));
+  const eligible = useMemo(() => CP_SCHEMES.filter(s => matches(s, profile)), []);
+
+  const startApply = (s) => { setScheme(s); setView('apply'); setWizStep(1); setDocSt({}); };
+  const submitApp = () => {
+    setApps([{ id: 'GW-' + Math.floor(Math.random()*900000+100000), schemeName: scheme.name, appliedDate: 'Today', status: 'submitted', timeline: [{step:'Submitted', s:'done', date:'Today'}], estDays: scheme.approvalDays }, ...apps]);
+    setWizStep(4);
+  };
+
+  return React.createElement('div', { className: 'cp-container' },
+    React.createElement('div', { className: 'cp-header' },
+      React.createElement('div', { className: 'cp-nav' },
+        ['dashboard', 'discover', 'track'].map(v => React.createElement('button', { key: v, className: `cp-nav-item ${view === v ? 'active' : ''}`, onClick: () => setView(v) }, v))
+      ),
+      React.createElement('div', { style: { fontSize: 12, color: '#00e5ff', fontFamily: 'Space Mono' } }, 'SESSION: 98X-T21')
+    ),
+    view === 'dashboard' && React.createElement('div', { className: 'cp-view' },
+      React.createElement('h3', { style: { fontSize: 24, marginBottom: 5 } }, 'Good Evening, Ojash'),
+      React.createElement('p', { style: { color: '#4a5880', marginBottom: 30 } }, `You have ${apps.length} applications on record.`),
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 30 } },
+        React.createElement('div', null,
+          React.createElement('div', { className: 'cp-card-p' },
+            React.createElement('div', { className: 'gv-panel-title', style: { fontSize: 10, marginBottom: 15 } }, 'APPLICATIONS IN PROGRESS'),
+            apps.map(a => React.createElement('div', { key: a.id, className: 'cp-status-row' },
+              React.createElement('div', null, React.createElement('div', { style: { fontWeight: 700 } }, a.schemeName), React.createElement('div', { style: { fontSize: 11, color: '#4a5880' } }, a.id)),
+              React.createElement('span', { className: 'cp-status-tag', style: { background: 'rgba(0,229,255,0.1)', color: '#00e5ff' } }, a.status)
+            ))
+          )
+        ),
+        React.createElement('div', null,
+          React.createElement('div', { className: 'cp-card-p', style: { borderColor: '#00e5ff' } },
+            React.createElement('div', { style: { fontWeight: 800, marginBottom: 5 } }, 'Recommended Scheme'),
+            React.createElement('p', { style: { fontSize: 11, color: '#4a5880', marginBottom: 15 } }, 'Based on your profile, you match 100% criteria for Ayushman Bharat.'),
+            React.createElement('button', { className: 'nav-cta', style: { width: '100%' }, onClick: () => setView('discover') }, 'Check Now')
+          )
+        )
+      )
+    ),
+    view === 'discover' && React.createElement('div', { className: 'cp-view' },
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 } },
+        CP_SCHEMES.map(s => React.createElement('div', { key: s.id, className: 'cp-card-p', style: { cursor: 'pointer' }, onClick: () => startApply(s) },
+          React.createElement('div', { style: { fontSize: 32, marginBottom: 10 } }, s.icon),
+          React.createElement('div', { style: { fontWeight: 800, fontSize: 16 } }, s.name),
+          React.createElement('div', { style: { fontSize: 11, color: '#4a5880', marginTop: 10 } }, s.tagline),
+          React.createElement('button', { className: 'nav-cta', style: { width: '100%', marginTop: 20 } }, 'Apply Now →')
+        ))
+      )
+    ),
+    view === 'apply' && React.createElement('div', { className: 'cp-view' },
+      wizStep < 4 ? React.createElement('div', { style: { maxWidth: 500, margin: '0 auto' } },
+        React.createElement('h4', null, `Applying for ${scheme.name}`),
+        React.createElement('div', { style: { margin: '30px 0' } },
+          wizStep === 1 && React.createElement('div', null, React.createElement('p', null, 'Step 1: Upload Aadhar'), React.createElement('div', { className: 'cp-upload-box', onClick: () => setDocSt({1:'done'}) }, docSt[1] ? '✓ Uploaded' : 'Click to Upload'), React.createElement('button', { className: 'nav-cta', style: { width: '100%', marginTop: 20 }, onClick: () => setWizStep(2) }, 'Next')),
+          wizStep === 2 && React.createElement('div', null, React.createElement('p', null, 'Step 2: Verify Income'), React.createElement('div', { className: 'cp-upload-box', onClick: () => setDocSt({2:'done'}) }, docSt[2] ? '✓ Verified' : 'Click to Upload'), React.createElement('button', { className: 'nav-cta', style: { width: '100%', marginTop: 20 }, onClick: () => setWizStep(3) }, 'Next')),
+          wizStep === 3 && React.createElement('div', null, React.createElement('p', null, 'Step 3: Identity OTP'), React.createElement('input', { className: 'cp-input', style: { width: '100%', textAlign: 'center', fontSize: 24 }, placeholder: '000000' }), React.createElement('button', { className: 'nav-cta', style: { width: '100%', marginTop: 20 }, onClick: submitApp }, 'Submit Application'))
+        )
+      ) : React.createElement('div', { style: { textAlign: 'center' } }, React.createElement('div', { style: { fontSize: 64 } }, '🎉'), React.createElement('h4', null, 'Application Submitted!'), React.createElement('button', { className: 'nav-cta', onClick: () => setView('track') }, 'Track Application'))
+    ),
+    view === 'track' && React.createElement('div', { className: 'cp-view' },
+      apps.map(a => React.createElement('div', { key: a.id, className: 'cp-card-p' },
+        React.createElement('div', { style: { fontWeight: 800 } }, a.schemeName),
+        React.createElement('div', { style: { fontSize: 11, color: '#4a5880' } }, a.id),
+        React.createElement('div', { style: { marginTop: 20, borderLeft: '2px solid #00e5ff', paddingLeft: 20 } },
+          a.timeline.map((t, i) => React.createElement('div', { key: i, style: { marginBottom: 10 } }, React.createElement('div', { style: { fontSize: 13, color: '#fff' } }, t.step), React.createElement('div', { style: { fontSize: 11, color: '#4a5880' } }, t.date)))
+        )
+      ))
+    )
   );
-
-  const grid = document.getElementById('portal-matches');
-  grid.innerHTML = matches.map(s => `
-    <div class="sim-card" onclick="startApplication('${s.name}')">
-      <div style="font-size: 10px; color: var(--text2); margin-bottom: 8px">${s.ministry}</div>
-      <div style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 12px">${s.name}</div>
-      <div style="font-size: 11px; color: var(--text2); margin-bottom: 15px">Benefits: Financial assistance and direct subsidy transfer.</div>
-      <button class="nav-cta" style="width: 100%; padding: 8px; background: transparent; border: 1px solid var(--cyan); color: var(--cyan)">Apply Now →</button>
-    </div>
-  `).join('');
 }
 
-function startApplication(schemeName) {
-  switchCpView('apply');
-  // Reset wizard
-  nextWiz(1);
-  document.getElementById('up-status-1').style.display = 'none';
-  document.getElementById('up-status-2').style.display = 'none';
-}
-
-function nextWiz(step) {
-  for(let i=1; i<=4; i++) {
-    document.getElementById('wiz-content-' + i).style.display = i === step ? 'block' : 'none';
-    const s = document.getElementById('w-step-' + i);
-    s.classList.remove('active', 'done');
-    if (i < step) s.classList.add('done');
-    if (i === step) s.classList.add('active');
-  }
-}
-
-function simulateUpload(id) {
-  const status = document.getElementById('up-status-' + id);
-  status.style.display = 'block';
-  status.textContent = 'Scanning...';
-  setTimeout(() => {
-    status.textContent = '✓ Verified by Gov-AI';
-  }, 1000);
-}
+ReactDOM.render(React.createElement(UnifiedPortal), document.getElementById('gcp-root'));
 
 /* ════════ BOOT ════════ */
 checkAuth();
-const name = localStorage.getItem('gw_name');
-if (name) document.getElementById('cp-user-name').textContent = name;
-runPortalEngine();
 loadStats();
 loadAlerts();
 loadSchemes();
