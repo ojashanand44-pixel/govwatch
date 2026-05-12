@@ -4193,11 +4193,11 @@
         ),
         // Content
         e('div', { style: { padding: '28px 28px', maxWidth: 900, margin: '0 auto' }, key: view },
-          view === 'dashboard' && e(Dashboard),
-          view === 'find' && e(FindSchemes),
-          view === 'detail' && e(SchemeDetail),
-          view === 'apply' && e(Wizard),
-          view === 'track' && e(Track)
+          view === 'dashboard' && Dashboard(),
+          view === 'find' && FindSchemes(),
+          view === 'detail' && SchemeDetail(),
+          view === 'apply' && Wizard(),
+          view === 'track' && Track()
         )
       );
     }
